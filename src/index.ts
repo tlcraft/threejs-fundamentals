@@ -1,6 +1,7 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 
-const container: HTMLElement | any = document.getElementById("app");
+const helloElement: HTMLElement | any = document.getElementById("hello");
+const container: HTMLElement | any = document.getElementById("three");
 
 const scene = new Scene();
 const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -32,8 +33,8 @@ function hello(str: string = world): string {
 }
 
 function printHello(): void {
-  container.innerHTML += hello();
+  helloElement.innerHTML += hello();
 }
 
-//printHello();
+printHello();
 animate();
