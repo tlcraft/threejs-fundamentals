@@ -10,15 +10,10 @@ const renderer = new WebGLRenderer();
 renderer.setSize( 300, 300 );
 container.appendChild( renderer.domElement );
 
-const geometry = new BoxGeometry();
-const material = new MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new Mesh( geometry, material );
+const cube = generateCube();
 scene.add( cube );
 
-const planeGeometry = new PlaneGeometry( 1, 1 );
-const planeMaterial = new MeshBasicMaterial( {color: 0xffff00, side: DoubleSide} );
-const plane = new Mesh( planeGeometry, planeMaterial );
-plane.position.set(2, 2, 0);
+const plane = generatePlane();
 scene.add( plane );
 
 const animate = function () {
@@ -31,3 +26,18 @@ const animate = function () {
 };
 
 animate();
+
+function generateCube(): Mesh {
+  const geometry = new BoxGeometry();
+  const material = new MeshBasicMaterial( { color: 0x00ff00 } );
+  const cube = new Mesh( geometry, material );
+  return cube;
+}
+
+function generatePlane(): Mesh {
+  const planeGeometry = new PlaneGeometry( 1, 1 );
+  const planeMaterial = new MeshBasicMaterial( {color: 0xffff00, side: DoubleSide} );
+  const plane = new Mesh( planeGeometry, planeMaterial );
+  plane.position.set(2, 2, 0);
+  return plane;
+}
