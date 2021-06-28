@@ -7,7 +7,7 @@ const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight
 camera.position.z = 5;
 
 const renderer = new WebGLRenderer();
-renderer.setSize( 300, 300 );
+renderer.setSize( 1000, 1000 );
 container.appendChild( renderer.domElement );
 
 const cube = generateCube();
