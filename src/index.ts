@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, DirectionalLight, AmbientLight } from 'three';
 
 const container: HTMLElement | any = document.getElementById("three");
 
@@ -11,10 +11,10 @@ renderer.setSize( 1000, 1000 );
 container.appendChild( renderer.domElement );
 
 const cube = generateCube();
-scene.add( cube );
+scene.add(cube);
 
 const plane = generatePlane();
-scene.add( plane );
+scene.add(plane);
 
 const animate = function () {
   requestAnimationFrame( animate );
@@ -35,9 +35,10 @@ function generateCube(): Mesh {
 }
 
 function generatePlane(): Mesh {
-  const planeGeometry = new PlaneGeometry( 1, 1 );
+  const planeGeometry = new PlaneGeometry( 30, 30 );
   const planeMaterial = new MeshBasicMaterial( {color: 0xffff00, side: DoubleSide} );
   const plane = new Mesh( planeGeometry, planeMaterial );
-  plane.position.set(2, 2, 0);
+  plane.position.set(0, -5, 0);
+  plane.rotateX( - Math.PI / 2);
   return plane;
 }
