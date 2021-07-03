@@ -26,6 +26,7 @@ const animate = function () {
 };
 
 animate();
+document.body.addEventListener( 'keydown', onKeyDown, false );
 
 function generateCube(): Mesh {
   const geometry = new BoxGeometry();
@@ -41,4 +42,17 @@ function generatePlane(): Mesh {
   plane.position.set(0, -5, 0);
   plane.rotateX( - Math.PI / 2);
   return plane;
+}
+
+function onKeyDown(event: any): void{
+  switch(event.keyCode) {
+      case 83: // up W
+        camera.position.z += 0.1;
+        break;
+      case 87: // down S
+        camera.position.z -= 0.1;
+        break;
+      default:
+        break;
+    }
 }
