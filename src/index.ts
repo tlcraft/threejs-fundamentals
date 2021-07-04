@@ -47,10 +47,16 @@ function generatePlane(): Mesh {
 function onKeyDown(event: any): void{
   switch(event.keyCode) {
       case 83: // up W
-        camera.position.z += 0.1;
+        camera.position.y -= 0.1;
         break;
       case 87: // down S
-        camera.position.z -= 0.1;
+        camera.position.y += 0.1;
+        break;
+      case 65: // up A
+        camera.position.x -= 0.1;
+        break;
+      case 68: // down D
+        camera.position.x += 0.1;
         break;
       default:
         break;
