@@ -4,10 +4,11 @@ const container: HTMLElement | any = document.getElementById("three");
 
 const scene = new Scene();
 const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.z = 5;
+camera.position.setZ(5);
 
 const renderer = new WebGLRenderer();
-renderer.setSize( 1000, 1000 );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
 container.appendChild( renderer.domElement );
 
 const cube = generateCube();
@@ -46,16 +47,16 @@ function generatePlane(): Mesh {
 
 function onKeyDown(event: any): void{
   switch(event.keyCode) {
-      case 83: // up W
-        camera.position.y -= 0.1;
+      case 83: // forward W
+        camera.position.z += 0.1;
         break;
-      case 87: // down S
-        camera.position.y += 0.1;
+      case 87: // backward S
+        camera.position.z -= 0.1;
         break;
-      case 65: // up A
+      case 65: // left A
         camera.position.x -= 0.1;
         break;
-      case 68: // down D
+      case 68: // right D
         camera.position.x += 0.1;
         break;
       default:
