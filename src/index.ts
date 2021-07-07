@@ -70,6 +70,12 @@ function onKeyDown(event: any): void{
       case 68: // right D
         camera.position.x += 0.1;
         break;
+      case 38: // up
+        camera.position.y += 0.1;
+        break;
+      case 40: // down
+        camera.position.y -= 0.1;
+        break;
       default:
         break;
     }
