@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
 
 const container: HTMLElement | any = document.getElementById("three");
 
@@ -19,6 +19,9 @@ scene.add(plane);
 
 const sphere = generateSphere();
 scene.add(sphere);
+
+const light = generatePointLight();
+scene.add( light )
 
 const animate = function () {
   requestAnimationFrame( animate );
@@ -50,10 +53,16 @@ function generatePlane(): Mesh {
 
 function generateSphere(): Mesh {
   const geometry = new SphereGeometry( 5, 5, 5 );
-  const material = new MeshBasicMaterial( {color: 0xffffff} );
+  const material = new MeshLambertMaterial( {color: 0xffffff} );
   const sphere = new Mesh( geometry, material );
   sphere.position.set(-10, 0, 0);
   return sphere;
+}
+
+function generatePointLight(): PointLight {
+  const light = new PointLight( 0xffffff, 1, 100 );
+  light.position.set( 5, 5, 5 );
+  return light;
 }
 
 function onKeyDown(event: any): void{
