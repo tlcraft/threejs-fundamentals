@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
 
 const container: HTMLElement | any = document.getElementById("three");
 
@@ -37,14 +37,14 @@ document.body.addEventListener( 'keydown', onKeyDown, false );
 
 function generateCube(): Mesh {
   const geometry = new BoxGeometry();
-  const material = new MeshBasicMaterial( { color: 0x00ff00 } );
+  const material = new MeshLambertMaterial( { color: 0x00ff00 } );
   const cube = new Mesh( geometry, material );
   return cube;
 }
 
 function generatePlane(): Mesh {
   const planeGeometry = new PlaneGeometry( 30, 30 );
-  const planeMaterial = new MeshBasicMaterial( {color: 0xffff00, side: DoubleSide} );
+  const planeMaterial = new MeshLambertMaterial( {color: 0xffff00, side: DoubleSide} );
   const plane = new Mesh( planeGeometry, planeMaterial );
   plane.position.set(0, -5, 0);
   plane.rotateX( - Math.PI / 2);
