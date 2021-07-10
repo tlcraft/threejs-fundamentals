@@ -60,8 +60,8 @@ function generateSphere(): Mesh {
 }
 
 function generatePointLight(): PointLight {
-  const light = new PointLight( 0xffffff, 1, 100 );
-  light.position.set( 5, 5, 5 );
+  const light = new PointLight( 0xffffff, 3, 100 );
+  light.position.set( 5, 10, 5 );
   return light;
 }
 
