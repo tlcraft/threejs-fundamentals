@@ -4,7 +4,7 @@ const container: HTMLElement | any = document.getElementById("three");
 
 const scene = new Scene();
 const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.setZ(5);
+camera.position.setZ(25);
 
 const renderer = new WebGLRenderer();
 renderer.setPixelRatio( window.devicePixelRatio );
