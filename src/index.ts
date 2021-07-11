@@ -1,14 +1,10 @@
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
 
-const container: HTMLElement | any = document.getElementById("three");
-
 const scene = new Scene();
-const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.setZ(25);
+const camera = generateCamera();
+const renderer = generateRenderer();
 
-const renderer = new WebGLRenderer();
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
+const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
 const cube = generateCube();
@@ -32,8 +28,18 @@ const animate = function () {
   renderer.render( scene, camera );
 };
 
-animate();
-document.body.addEventListener( 'keydown', onKeyDown, false );
+function generateCamera(): PerspectiveCamera {
+  const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  camera.position.setZ(25);
+  return camera;
+}
+
+function generateRenderer(): WebGLRenderer {
+  const renderer = new WebGLRenderer();
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  return renderer;
+}
 
 function generateCube(): Mesh {
   const geometry = new BoxGeometry();
@@ -89,3 +95,6 @@ function onKeyDown(event: any): void{
         break;
     }
 }
+
+animate();
+document.body.addEventListener( 'keydown', onKeyDown, false );
