@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight } from 'three';
 
 const scene = new Scene();
 const camera = generateCamera();
@@ -18,6 +18,9 @@ scene.add(sphere);
 
 const light = generatePointLight();
 scene.add( light )
+
+const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+scene.add( ambientLight );
 
 const animate = function () {
   requestAnimationFrame( animate );
