@@ -77,22 +77,22 @@ function generatePointLight(): PointLight {
 function onKeyDown(event: any): void{
   switch(event.keyCode) {
       case 83: // forward W
-        camera.position.z += 0.1;
+        camera.position.z += 0.25;
         break;
       case 87: // backward S
-        camera.position.z -= 0.1;
+        camera.position.z -= 0.25;
         break;
       case 65: // left A
-        camera.position.x -= 0.1;
+        camera.position.x -= 0.25;
         break;
       case 68: // right D
-        camera.position.x += 0.1;
+        camera.position.x += 0.25;
         break;
       case 38: // up
-        camera.position.y += 0.1;
+        camera.position.y += 0.25;
         break;
       case 40: // down
-        camera.position.y -= 0.1;
+        camera.position.y -= 0.25;
         break;
       default:
         break;
