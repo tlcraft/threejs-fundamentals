@@ -1,8 +1,10 @@
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = new Scene();
 const camera = generateCamera();
 const renderer = generateRenderer();
+const controls = new OrbitControls( camera, renderer.domElement );
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -28,6 +30,7 @@ const animate = function () {
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
 
+  controls.update();
   renderer.render( scene, camera );
 };
 
