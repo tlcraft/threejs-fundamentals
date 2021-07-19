@@ -1,8 +1,7 @@
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const scene = new Scene();
-scene.background = new Color( 0xcccccc );
+const scene = generateScene();
 const camera = generateCamera();
 const renderer = generateRenderer();
 const controls = new OrbitControls( camera, renderer.domElement );
@@ -34,6 +33,12 @@ const animate = function () {
   controls.update();
   renderer.render( scene, camera );
 };
+
+function generateScene(): Scene {
+  const scene = new Scene();
+  scene.background = new Color( 0xcccccc );
+  return scene;
+}
 
 function generateCamera(): PerspectiveCamera {
   const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
