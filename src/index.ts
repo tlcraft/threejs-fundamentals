@@ -1,8 +1,10 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color } from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const scene = new Scene();
+const scene = generateScene();
 const camera = generateCamera();
 const renderer = generateRenderer();
+const controls = new OrbitControls( camera, renderer.domElement );
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -19,14 +21,24 @@ scene.add(sphere);
 const light = generatePointLight();
 scene.add( light )
 
+const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+scene.add( ambientLight );
+
 const animate = function () {
   requestAnimationFrame( animate );
 
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
 
+  controls.update();
   renderer.render( scene, camera );
 };
+
+function generateScene(): Scene {
+  const scene = new Scene();
+  scene.background = new Color( 0xcccccc );
+  return scene;
+}
 
 function generateCamera(): PerspectiveCamera {
   const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -35,7 +47,7 @@ function generateCamera(): PerspectiveCamera {
 }
 
 function generateRenderer(): WebGLRenderer {
-  const renderer = new WebGLRenderer();
+  const renderer = new WebGLRenderer({ antialias: true });
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   return renderer;
@@ -49,8 +61,8 @@ function generateCube(): Mesh {
 }
 
 function generatePlane(): Mesh {
-  const planeGeometry = new PlaneGeometry( 30, 30 );
-  const planeMaterial = new MeshLambertMaterial( {color: 0xffff00, side: DoubleSide} );
+  const planeGeometry = new PlaneGeometry( 60, 60 );
+  const planeMaterial = new MeshLambertMaterial( {color: 0xff5733, side: DoubleSide} );
   const plane = new Mesh( planeGeometry, planeMaterial );
   plane.position.set(0, -5, 0);
   plane.rotateX( - Math.PI / 2);
@@ -58,8 +70,8 @@ function generatePlane(): Mesh {
 }
 
 function generateSphere(): Mesh {
-  const geometry = new SphereGeometry( 5, 5, 5 );
-  const material = new MeshLambertMaterial( {color: 0xffffff} );
+  const geometry = new SphereGeometry( 5, 15, 15 );
+  const material = new MeshLambertMaterial( {color: 0x338dff} );
   const sphere = new Mesh( geometry, material );
   sphere.position.set(-10, 0, 0);
   return sphere;
@@ -74,22 +86,22 @@ function generatePointLight(): PointLight {
 function onKeyDown(event: any): void{
   switch(event.keyCode) {
       case 83: // forward W
-        camera.position.z += 0.1;
+        camera.position.z += 0.25;
         break;
       case 87: // backward S
-        camera.position.z -= 0.1;
+        camera.position.z -= 0.25;
         break;
       case 65: // left A
-        camera.position.x -= 0.1;
+        camera.position.x -= 0.25;
         break;
       case 68: // right D
-        camera.position.x += 0.1;
+        camera.position.x += 0.25;
         break;
       case 38: // up
-        camera.position.y += 0.1;
+        camera.position.y += 0.25;
         break;
       case 40: // down
-        camera.position.y -= 0.1;
+        camera.position.y -= 0.25;
         break;
       default:
         break;
