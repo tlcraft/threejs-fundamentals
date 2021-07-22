@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
@@ -20,6 +20,9 @@ scene.add(sphere);
 
 const circle = generateCircle();
 scene.add(circle);
+
+const knot = generateTorusKnot();
+scene.add(knot);
 
 const light = generatePointLight();
 scene.add( light )
@@ -67,7 +70,7 @@ function generatePlane(): Mesh {
   const planeGeometry = new PlaneGeometry( 60, 60 );
   const planeMaterial = new MeshLambertMaterial( {color: 0xff5733, side: DoubleSide} );
   const plane = new Mesh( planeGeometry, planeMaterial );
-  plane.position.set(0, -5, 0);
+  plane.position.set(0, -10, 0);
   plane.rotateX( - Math.PI / 2);
   return plane;
 }
@@ -86,6 +89,14 @@ function generateCircle(): Mesh {
   const circle = new Mesh( geometry, material );
   circle.position.set(0, 0, -15);
   return circle;
+}
+
+function generateTorusKnot(): Mesh {
+  const geometry = new TorusKnotGeometry( 10, 3, 100, 16 );
+  const material = new MeshLambertMaterial( { color: 0x22ff88 } );
+  const torusKnot = new Mesh( geometry, material );
+  torusKnot.position.set(-40, 10, -15);
+  return torusKnot;
 }
 
 function generatePointLight(): PointLight {
