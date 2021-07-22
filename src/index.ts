@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
@@ -17,6 +17,9 @@ scene.add(plane);
 
 const sphere = generateSphere();
 scene.add(sphere);
+
+const circle = generateCircle();
+scene.add(circle);
 
 const light = generatePointLight();
 scene.add( light )
@@ -75,6 +78,14 @@ function generateSphere(): Mesh {
   const sphere = new Mesh( geometry, material );
   sphere.position.set(-10, 0, 0);
   return sphere;
+}
+
+function generateCircle(): Mesh {
+  const geometry = new CircleGeometry( 5, 48 );
+  const material = new MeshLambertMaterial( { color: 0xB0B000 } );
+  const circle = new Mesh( geometry, material );
+  circle.position.set(0, 0, -15);
+  return circle;
 }
 
 function generatePointLight(): PointLight {
