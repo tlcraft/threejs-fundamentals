@@ -91,7 +91,7 @@ function generateSphere(): Mesh {
 
 function generateCircle(): Mesh {
   const geometry = new CircleGeometry( 5, 48 );
-  const material = new MeshLambertMaterial( { color: 0xB0B000 } );
+  const material = new MeshLambertMaterial( { color: 0xB0B000, side: DoubleSide } );
   const circle = new Mesh( geometry, material );
   circle.position.set(0, 0, -15);
   return circle;
