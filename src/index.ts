@@ -41,10 +41,22 @@ const animate = function () {
 
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
+  
+  moveRing(ring);
 
   controls.update();
   renderer.render( scene, camera );
 };
+
+let vector = 0.5;
+function moveRing(ring: Mesh): void {
+  if(vector < 0 && ring.position.z < 12) {
+    vector *= -1;
+  } else if (vector > 0 && ring.position.z > 18) {
+    vector *= -1;
+  }
+  ring.position.z += vector;
+}
 
 function generateScene(): Scene {
   const scene = new Scene();
