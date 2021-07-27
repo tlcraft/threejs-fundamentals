@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry } from 'three';
+import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
@@ -29,6 +29,9 @@ scene.add(ring);
 
 const octahedron = generateOctahedron();
 scene.add(octahedron);
+
+const text = generateText();
+scene.add(text);
 
 const light = generatePointLight();
 scene.add( light )
@@ -131,6 +134,28 @@ function generateOctahedron(): Mesh {
   const octahedron = new Mesh( geometry, material );
   octahedron.position.set(0, 5, 15);
   return octahedron;
+}
+
+function generateText(): Mesh {
+  const loader = new FontLoader();
+  let geometry;
+  loader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
+      geometry = new TextGeometry( 'Hello three.js!', {
+        font: font,
+        size: 80,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelOffset: 0,
+        bevelSegments: 5
+      });
+  });
+
+  var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+  var mesh = new Mesh( geometry, material );
+  return mesh;
 }
 
 function generatePointLight(): PointLight {
