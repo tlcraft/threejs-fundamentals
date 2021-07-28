@@ -120,6 +120,7 @@ function generateTorusKnot(): Mesh {
   const material = new MeshLambertMaterial( { color: 0x22ff88 } );
   const torusKnot = new Mesh( geometry, material );
   torusKnot.position.set(-40, 10, -15);
+  torusKnot.scale.set(0.5, 0.5, 0.5);
   return torusKnot;
 }
 
