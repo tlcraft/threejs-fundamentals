@@ -1,4 +1,4 @@
-import { AxesHelper, BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial } from 'three';
+import { AxesHelper, BoxGeometry, CylinderGeometry, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial, ConeGeometry } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
@@ -37,6 +37,9 @@ scene.add(text);
 
 const light = generatePointLight();
 scene.add( light )
+
+const rocket = generateRocketGroup();
+scene.add(rocket);
 
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
@@ -160,6 +163,29 @@ function generateText(): Mesh {
   var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
   var mesh = new Mesh( geometry, material );
   return mesh;
+}
+
+function generateRocketGroup(): Group {
+  const group = new Group();
+
+  const cone = new Mesh(
+    new ConeGeometry(3, 10, 64),
+    new MeshLambertMaterial({ color: 0x0f0f0f })
+  );
+
+  const cylinder = new Mesh(
+    new CylinderGeometry(3, 3, 10, 64),
+    new MeshLambertMaterial({ color: 0x0f0f0f })
+  );
+  cylinder.position.y = -10;
+
+  group.add(cone);
+  group.add(cylinder);
+
+  group.scale.set(0.75, 0.75, 0.75);
+  group.position.y = 15;
+
+  return group;
 }
 
 function generatePointLight(): PointLight {
