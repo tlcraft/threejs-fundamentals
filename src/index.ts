@@ -1,10 +1,12 @@
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial } from 'three';
+import { AxesHelper, BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
 const camera = generateCamera();
 const renderer = generateRenderer();
 const controls = new OrbitControls( camera, renderer.domElement );
+const axesHelper = new AxesHelper();
+scene.add(axesHelper);
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -84,6 +86,7 @@ function generateCube(): Mesh {
   const geometry = new BoxGeometry();
   const material = new MeshLambertMaterial( { color: 0x00ff00 } );
   const cube = new Mesh( geometry, material );
+  cube.position.x = 10;
   return cube;
 }
 
