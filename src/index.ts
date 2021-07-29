@@ -32,8 +32,7 @@ scene.add(ring);
 const octahedron = generateOctahedron();
 scene.add(octahedron);
 
-const text = generateText();
-scene.add(text);
+addText(scene);
 
 const light = generatePointLight();
 scene.add( light )
@@ -145,26 +144,22 @@ function generateOctahedron(): Mesh {
   return octahedron;
 }
 
-function generateText(): Mesh {
+function addText(scene: Scene): void {
   const loader = new FontLoader();
-  let geometry;
   loader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
-      geometry = new TextGeometry( 'Hello three.js!', {
+      const geometry = new TextGeometry( 'Hello three.js!', {
         font: font,
-        size: 80,
+        size: 10,
         height: 5,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 10,
-        bevelSize: 8,
-        bevelOffset: 0,
-        bevelSegments: 5
+        bevelEnabled: false
       });
-  });
 
-  var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-  var mesh = new Mesh( geometry, material );
-  return mesh;
+      var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+      var mesh = new Mesh( geometry, material );
+      mesh.position.z = -60;
+      mesh.position.x = -40;
+      scene.add(mesh);
+  });
 }
 
 function generateRocketGroup(): Group {
