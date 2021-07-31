@@ -27,6 +27,8 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+import gsap from 'gsap';
+
 const scene = generateScene();
 const camera = generateCamera();
 const renderer = generateRenderer();
@@ -68,6 +70,8 @@ scene.add(rocket);
 
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
+
+gsap.to(knot.position, { duration: 2, delay: 1,  x: -50});
 
 const clock = new Clock();
 const animate = function () {
