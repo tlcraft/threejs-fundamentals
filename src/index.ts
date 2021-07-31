@@ -1,4 +1,30 @@
-import { AxesHelper, BoxGeometry, CylinderGeometry, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial, ConeGeometry, Clock } from 'three';
+import { 
+  AmbientLight,
+  AxesHelper,
+  BoxGeometry,
+  CircleGeometry,
+  Clock,
+  Color,
+  ConeGeometry,
+  CylinderGeometry,
+  DoubleSide,
+  FontLoader,
+  Group,
+  Mesh,
+  MeshLambertMaterial,
+  MeshPhongMaterial,
+  OctahedronGeometry,
+  PerspectiveCamera,
+  PlaneGeometry,
+  PointLight,
+  RingGeometry,
+  Scene,
+  SphereGeometry,
+  TextGeometry,
+  TorusKnotGeometry,
+  WebGLRenderer
+} from 'three';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
