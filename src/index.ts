@@ -1,4 +1,4 @@
-import { AxesHelper, BoxGeometry, CylinderGeometry, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial, ConeGeometry } from 'three';
+import { AxesHelper, BoxGeometry, CylinderGeometry, Group, Mesh, PerspectiveCamera, Scene, WebGLRenderer, PlaneGeometry, DoubleSide, SphereGeometry, MeshLambertMaterial, PointLight, AmbientLight, Color, CircleGeometry, TorusKnotGeometry, RingGeometry, OctahedronGeometry, FontLoader, TextGeometry, MeshPhongMaterial, ConeGeometry, Clock } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const scene = generateScene();
@@ -43,13 +43,16 @@ scene.add(rocket);
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
+const clock = new Clock();
 const animate = function () {
   requestAnimationFrame( animate );
 
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
+  const delta = clock.getDelta();
 
-  sphere.rotation.y += 0.01;
+  cube.rotation.x += delta;
+  cube.rotation.y += delta;
+
+  sphere.rotation.y += delta;
   
   moveRing(ring);
 
@@ -57,14 +60,8 @@ const animate = function () {
   renderer.render( scene, camera );
 };
 
-let vector = 0.5;
 function moveRing(ring: Mesh): void {
-  if(vector < 0 && ring.position.z < 12) {
-    vector *= -1;
-  } else if (vector > 0 && ring.position.z > 18) {
-    vector *= -1;
-  }
-  ring.position.z += vector;
+  ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
 }
 
 function generateScene(): Scene {
