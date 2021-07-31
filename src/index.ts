@@ -28,6 +28,7 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import gsap from 'gsap';
+import { Point } from '~point';
 
 const scene = generateScene();
 const camera = generateCamera();
@@ -60,7 +61,8 @@ scene.add(ring);
 const octahedron = generateOctahedron();
 scene.add(octahedron);
 
-addText(scene);
+addText(scene, 'Hello three.js!', { x: -40, z: -60});
+addText(scene, 'Test', { x: -40, y: 30, z: -60});
 
 const light = generatePointLight();
 scene.add( light )
@@ -172,10 +174,10 @@ function generateOctahedron(): Mesh {
   return octahedron;
 }
 
-function addText(scene: Scene): void {
+function addText(scene: Scene, text: string, position: Point): void {
   const loader = new FontLoader();
   loader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
-      const geometry = new TextGeometry( 'Hello three.js!', {
+      const geometry = new TextGeometry( text, {
         font: font,
         size: 10,
         height: 5,
@@ -184,8 +186,9 @@ function addText(scene: Scene): void {
 
       var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
       var mesh = new Mesh( geometry, material );
-      mesh.position.z = -60;
-      mesh.position.x = -40;
+      mesh.position.z = position.z ? position.z : 0;
+      mesh.position.y = position.y ? position.y : 0;
+      mesh.position.x = position.x ? position.x : 0;
       scene.add(mesh);
   });
 }
