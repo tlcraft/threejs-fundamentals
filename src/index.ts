@@ -71,7 +71,8 @@ scene.add(rocket);
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
-gsap.to(knot.position, { duration: 2, delay: 1,  x: -50});
+gsap.to(knot.position, { duration: 3, delay: 6,  x: -60});
+gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
 const clock = new Clock();
 const animate = function () {
