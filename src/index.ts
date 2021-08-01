@@ -112,7 +112,8 @@ function generatePerspectivCamera(): PerspectiveCamera { // Vision like a cone
 }
 
 function generateOrthographicCamera(): OrthographicCamera { // Vision like a box
-  const camera = new OrthographicCamera( -30,  30, 30, -30, 0.1, 1000 );
+  const aspectRatio = window.innerWidth / window.innerHeight;
+  const camera = new OrthographicCamera( -30 * aspectRatio,  30 * aspectRatio, 30, -30, 0.1, 1000 );
   camera.position.setZ(25);
   return camera;
 }
