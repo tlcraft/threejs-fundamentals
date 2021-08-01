@@ -40,7 +40,7 @@ scene.add(axesHelper);
 
 window.addEventListener('mousemove', (event: any) => {
     cursor.x = event.clientX / window.innerWidth - 0.5;
-    cursor.y = event.clientY / window.innerHeight - 0.5;
+    cursor.y = (event.clientY / window.innerHeight - 0.5);
 });
 
 const container: HTMLElement | any = document.getElementById("three");
@@ -92,6 +92,9 @@ const animate = function () {
     cube.rotation.y += delta;
 
     sphere.rotation.y += delta;
+
+    camera.position.x = cursor.x * 10;
+    camera.position.y = cursor.y * 10;
 
     moveRing(ring);
 
