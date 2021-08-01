@@ -93,12 +93,13 @@ const animate = function () {
 
     sphere.rotation.y += delta;
 
-    camera.position.x = cursor.x * 10;
-    camera.position.y = cursor.y * 10;
+    camera.position.x = cursor.x * 100;
+    camera.position.y = cursor.y * 100;
+    camera.lookAt(axesHelper.position);
 
     moveRing(ring);
 
-    controls.update();
+    //controls.update();
     renderer.render( scene, camera );
 };
 
