@@ -14,6 +14,7 @@ import {
   MeshLambertMaterial,
   MeshPhongMaterial,
   OctahedronGeometry,
+  OrthographicCamera,
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
@@ -31,7 +32,7 @@ import gsap from 'gsap';
 import { Point } from '~point';
 
 const scene = generateScene();
-const camera = generateCamera();
+const camera = generateOrthographicCamera();
 const renderer = generateRenderer();
 const controls = new OrbitControls( camera, renderer.domElement );
 const axesHelper = new AxesHelper();
@@ -103,9 +104,15 @@ function generateScene(): Scene {
   return scene;
 }
 
-function generateCamera(): PerspectiveCamera {
+function generatePerspectivCamera(): PerspectiveCamera { // Vision like a cone
   // A field of view between 45 and 75 is generally sufficent depending on your needs
   const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  camera.position.setZ(25);
+  return camera;
+}
+
+function generateOrthographicCamera(): OrthographicCamera { // Vision like a box
+  const camera = new OrthographicCamera( -30,  30, 30, -30, 0.1, 1000 );
   camera.position.setZ(25);
   return camera;
 }
