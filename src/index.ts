@@ -34,7 +34,7 @@ const cursor: Cursor = { x: 1, y: 1};
 const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
-const controls = new OrbitControls( camera, renderer.domElement );
+const controls = generateControls();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
@@ -94,17 +94,18 @@ const animate = function () {
 
     sphere.rotation.y += delta;
 
+    // Alternative control schemes
     // camera.position.x = cursor.x * 100;
     // camera.position.y = cursor.y * 100;
     
-    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
-    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-    camera.position.y = cursor.y * 5;
-    camera.lookAt(axesHelper.position);
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+    // camera.position.y = cursor.y * 5;
+    // camera.lookAt(axesHelper.position);
 
     moveRing(ring);
 
-    //controls.update();
+    controls.update();
     renderer.render( scene, camera );
 };
 
@@ -121,7 +122,7 @@ function generateScene(): Scene {
 function generatePerspectivCamera(): PerspectiveCamera { // Vision like a cone
     // A field of view between 45 and 75 is generally sufficent depending on your needs
     const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.setZ(75);
+    camera.position.setZ(25);
     return camera;
 }
 
@@ -137,6 +138,12 @@ function generateRenderer(): WebGLRenderer {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     return renderer;
+}
+
+function generateControls(): OrbitControls {
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.enableDamping = true;
+    return controls;
 }
 
 function generateCube(): Mesh {
