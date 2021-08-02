@@ -79,8 +79,9 @@ scene.add(rocket);
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
-gsap.to(knot.position, { duration: 3, delay: 6,  x: -60});
-gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
+// Tween camera and object
+//gsap.to(knot.position, { duration: 3, delay: 6,  x: -60});
+//gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
 const clock = new Clock();
 const animate = function () {
@@ -93,8 +94,12 @@ const animate = function () {
 
     sphere.rotation.y += delta;
 
-    camera.position.x = cursor.x * 100;
-    camera.position.y = cursor.y * 100;
+    // camera.position.x = cursor.x * 100;
+    // camera.position.y = cursor.y * 100;
+    
+    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+    camera.position.y = cursor.y * 5;
     camera.lookAt(axesHelper.position);
 
     moveRing(ring);
@@ -116,7 +121,7 @@ function generateScene(): Scene {
 function generatePerspectivCamera(): PerspectiveCamera { // Vision like a cone
     // A field of view between 45 and 75 is generally sufficent depending on your needs
     const camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.setZ(25);
+    camera.position.setZ(75);
     return camera;
 }
 
