@@ -43,6 +43,12 @@ window.addEventListener('mousemove', (event: any) => {
     cursor.y = (event.clientY / window.innerHeight - 0.5);
 });
 
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
