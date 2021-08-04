@@ -144,7 +144,7 @@ function generateControls(): OrbitControls {
 
 function generateCube(): Mesh {
     const geometry = new BoxGeometry();
-    const material = new MeshLambertMaterial( { color: 0x00ff00 } );
+    const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 10;
     return cube;
