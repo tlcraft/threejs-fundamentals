@@ -287,4 +287,21 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
+window.addEventListener('dblclick', () => {
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+    if(!fullscreenElement) {
+        if(container.requestFullscreen){
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+        }
+    } else {
+        if(document.exitFullscreen){
+            document.exitFullscreen();
+        } else if(document.webkitExitFullscreen){
+            document.webkitExitFullscreen();
+        }
+    }
+});
+
 animate();
