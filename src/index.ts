@@ -132,6 +132,7 @@ function generateRenderer(): WebGLRenderer {
     const renderer = new WebGLRenderer({ antialias: true });
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     return renderer;
 }
 
@@ -283,6 +284,7 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 animate();
