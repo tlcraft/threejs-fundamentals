@@ -30,24 +30,13 @@ import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
 
-const cursor: Cursor = { x: 1, y: 1};
+const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
 const controls = generateControls();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
-
-window.addEventListener('mousemove', (event: any) => {
-    cursor.x = event.clientX / window.innerWidth - 0.5;
-    cursor.y = (event.clientY / window.innerHeight - 0.5);
-});
-
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -283,5 +272,17 @@ function onKeyDown(event: any): void{
     }
 }
 
-animate();
 document.body.addEventListener( 'keydown', onKeyDown, false );
+
+window.addEventListener('mousemove', (event: any) => {
+    cursor.x = event.clientX / window.innerWidth - 0.5;
+    cursor.y = (event.clientY / window.innerHeight - 0.5);
+});
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+animate();
