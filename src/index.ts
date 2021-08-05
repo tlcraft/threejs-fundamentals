@@ -156,11 +156,12 @@ function generateCube(): Mesh {
 }
 
 function generateBufferGeometry(): Mesh {
-    const positions = new Float32Array([
-        0, 0, -1,
-        0, 1, -1,
-        1, 0, -1
-    ]); // x, y, z vertices
+    const numberOfTriangles = 2;
+    const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
+    const positions = new Float32Array(totalLength); // x, y, z vertices
+    for(let i = 0; i < totalLength; i++) {
+        positions[i] = Math.random() - 1;
+    }
 
     const positionsAttribute = new BufferAttribute(positions, 3);
 
