@@ -2,6 +2,8 @@ import {
   AmbientLight,
   AxesHelper,
   BoxGeometry,
+  BufferAttribute,
+  BufferGeometry,
   CircleGeometry,
   Clock,
   Color,
@@ -43,6 +45,9 @@ container.appendChild( renderer.domElement );
 
 const cube = generateCube();
 scene.add(cube);
+
+const mesh = generateBufferGeometry();
+scene.add(mesh);
 
 const plane = generatePlane();
 scene.add(plane);
@@ -148,6 +153,23 @@ function generateCube(): Mesh {
     const cube = new Mesh( geometry, material );
     cube.position.x = 10;
     return cube;
+}
+
+function generateBufferGeometry(): Mesh {
+    const positions = new Float32Array([
+        0, 0, -1,
+        0, 1, -1,
+        1, 0, -1
+    ]); // x, y, z vertices
+
+    const positionsAttribute = new BufferAttribute(positions, 3);
+
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', positionsAttribute);
+    const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
+    const mesh = new Mesh( geometry, material );
+
+    return mesh;
 }
 
 function generatePlane(): Mesh {
