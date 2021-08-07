@@ -28,9 +28,12 @@ import {
   WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
+
+const debugGui = new dat.GUI();
 
 const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
@@ -80,7 +83,7 @@ const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
 // Tween camera and object
-//gsap.to(knot.position, { duration: 3, delay: 6,  x: -60});
+gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
 //gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
 const clock = new Clock();
@@ -108,6 +111,14 @@ const animate = function () {
     controls.update();
     renderer.render( scene, camera );
 };
+
+configurDebugGui();
+
+function configurDebugGui(): void {
+    debugGui.add(cube.position, 'x').min(-10).max(10).step(0.01).name('X-axis');
+    debugGui.add(cube.position, 'y').min(-10).max(10).step(0.01).name('Y-axis');
+    debugGui.add(cube.position, 'z').min(-10).max(10).step(0.01).name('Z-axis');
+}
 
 function moveRing(ring: Mesh): void {
     ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
