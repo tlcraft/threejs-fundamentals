@@ -119,13 +119,21 @@ function configurDebugGui(): void {
     configureMeshDebug(octahedron);
 }
 
-function configureMeshDebug(mesh: Mesh): void {
+function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial>): void {
     debugGui.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('X-axis');
     debugGui.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('Y-axis');
     debugGui.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('Z-axis');
 
     debugGui.add(mesh, 'visible');
     debugGui.add(mesh.material, 'wireframe');
+
+    const parameters = {
+        color: mesh.material.color.getHex()
+    };
+
+    debugGui.addColor(parameters, 'color').onChange(() => {
+        mesh.material.color.set(parameters.color);
+    });
 }
 
 function moveRing(ring: Mesh): void {
@@ -166,7 +174,7 @@ function generateControls(): OrbitControls {
     return controls;
 }
 
-function generateCube(): Mesh {
+function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new BoxGeometry();
     const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
     const cube = new Mesh( geometry, material );
@@ -234,7 +242,7 @@ function generateRing(): Mesh {
     return ring;
 }
 
-function generateOctahedron(): Mesh {
+function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new OctahedronGeometry( 3 );
     const material = new MeshLambertMaterial( { color: 0x00ffff } );
     const octahedron = new Mesh( geometry, material );
