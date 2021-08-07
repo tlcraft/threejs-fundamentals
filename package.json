@@ -18,6 +18,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/dat.gui": "^0.7.7",
     "@types/three": "^0.129.1",
     "dat.gui": "^0.7.7",
     "gsap": "^3.7.1",
