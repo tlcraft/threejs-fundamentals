@@ -115,9 +115,17 @@ const animate = function () {
 configurDebugGui();
 
 function configurDebugGui(): void {
-    debugGui.add(cube.position, 'x').min(-10).max(10).step(0.01).name('X-axis');
-    debugGui.add(cube.position, 'y').min(-10).max(10).step(0.01).name('Y-axis');
-    debugGui.add(cube.position, 'z').min(-10).max(10).step(0.01).name('Z-axis');
+    configureMeshDebug(cube);
+    configureMeshDebug(octahedron);
+}
+
+function configureMeshDebug(mesh: Mesh): void {
+    debugGui.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('X-axis');
+    debugGui.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('Y-axis');
+    debugGui.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('Z-axis');
+
+    debugGui.add(mesh, 'visible');
+    debugGui.add(mesh.material, 'wireframe');
 }
 
 function moveRing(ring: Mesh): void {
