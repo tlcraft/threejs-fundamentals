@@ -115,7 +115,10 @@ const animate = function () {
 configurDebugGui();
 
 function generateDebugGui(): dat.GUI {
-    const debugGui = new dat.GUI();
+    const debugGui = new dat.GUI({ 
+        closed: true, 
+        width: 350,
+    });
     debugGui.hide();
     return debugGui;
 }
