@@ -33,7 +33,7 @@ import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
 
-const debugGui = new dat.GUI();
+const debugGui = generateDebugGui();
 
 const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
@@ -113,6 +113,12 @@ const animate = function () {
 };
 
 configurDebugGui();
+
+function generateDebugGui(): dat.GUI {
+    const debugGui = new dat.GUI();
+    debugGui.hide();
+    return debugGui;
+}
 
 function configurDebugGui(): void {
     configureMeshDebug(cube);
