@@ -131,9 +131,9 @@ function configurDebugGui(): void {
 
 function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
-    folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('X-axis');
-    folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('Y-axis');
-    folder.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('Z-axis');
+    folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
+    folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
+    folder.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('z-axis');
 
     folder.add(mesh, 'visible');
     folder.add(mesh.material, 'wireframe');
