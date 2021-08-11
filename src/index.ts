@@ -13,6 +13,7 @@ import {
   FontLoader,
   Group,
   Mesh,
+  MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
   OctahedronGeometry,
@@ -24,6 +25,7 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
+  Texture,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
@@ -32,6 +34,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
+import image from './crate.jpg';
 
 const debugGui = generateDebugGui();
 
@@ -43,11 +46,17 @@ const controls = generateControls();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
+const crate = new Image();
+crate.src = image;
+
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
 const cube = generateCube();
 scene.add(cube);
+
+const texturedCube = generateCubeWithTexture();
+scene.add(texturedCube);
 
 const mesh = generateBufferGeometry();
 scene.add(mesh);
@@ -125,6 +134,8 @@ function generateDebugGui(): dat.GUI {
 
 function configurDebugGui(): void {
     configureMeshDebug(cube, 'cube');
+    configureMeshDebug(mesh, 'buffer mesh');
+    configureMeshDebug(plane, 'plane');
     configureMeshDebug(ring, 'ring');
     configureMeshDebug(octahedron, 'octahedron');
 }
@@ -193,7 +204,19 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return cube;
 }
 
-function generateBufferGeometry(): Mesh {
+function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const geometry = new BoxGeometry();
+    const texture = new Texture(crate);
+    crate.onload = () => {
+        texture.needsUpdate = true;
+    };
+    const material = new MeshLambertMaterial( { map: texture } );
+    const cube = new Mesh( geometry, material );
+    cube.position.x = 15;
+    return cube;
+}
+
+function generateBufferGeometry(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const numberOfTriangles = 2;
     const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
@@ -211,7 +234,7 @@ function generateBufferGeometry(): Mesh {
     return mesh;
 }
 
-function generatePlane(): Mesh {
+function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const planeGeometry = new PlaneGeometry( 60, 60 );
     const planeMaterial = new MeshLambertMaterial( {color: 0xff5733, side: DoubleSide} );
     const plane = new Mesh( planeGeometry, planeMaterial );
