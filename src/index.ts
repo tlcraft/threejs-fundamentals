@@ -135,12 +135,13 @@ function generateDebugGui(): dat.GUI {
 function configurDebugGui(): void {
     configureMeshDebug(cube, 'cube');
     configureMeshDebug(mesh, 'buffer mesh');
+    configureMeshDebug(texturedCube, 'textured cube');
     configureMeshDebug(plane, 'plane');
     configureMeshDebug(ring, 'ring');
     configureMeshDebug(octahedron, 'octahedron');
 }
 
-function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial>, name: string): void {
+function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
     folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
     folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
@@ -210,7 +211,7 @@ function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     crate.onload = () => {
         texture.needsUpdate = true;
     };
-    const material = new MeshLambertMaterial( { map: texture } );
+    const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
     return cube;
