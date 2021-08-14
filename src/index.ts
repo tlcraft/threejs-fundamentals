@@ -46,9 +46,6 @@ const controls = generateControls();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
-const crate = new Image();
-crate.src = image;
-
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
@@ -134,9 +131,12 @@ function generateDebugGui(): dat.GUI {
 
 function configurDebugGui(): void {
     configureMeshDebug(cube, 'cube');
-    configureMeshDebug(mesh, 'buffer mesh');
     configureMeshDebug(texturedCube, 'textured cube');
+    configureMeshDebug(mesh, 'buffer mesh');
     configureMeshDebug(plane, 'plane');
+    configureMeshDebug(sphere, 'sphere');
+    configureMeshDebug(circle, 'circle');
+    configureMeshDebug(knot, 'know');
     configureMeshDebug(ring, 'ring');
     configureMeshDebug(octahedron, 'octahedron');
 }
@@ -206,11 +206,14 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
-    const geometry = new BoxGeometry();
-    const texture = new Texture(crate);
+    const crate = new Image();
+    crate.src = image;
     crate.onload = () => {
         texture.needsUpdate = true;
     };
+
+    const geometry = new BoxGeometry();
+    const texture = new Texture(crate);
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
@@ -244,7 +247,7 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return plane;
 }
 
-function generateSphere(): Mesh {
+function generateSphere(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new SphereGeometry( 5, 15, 15 );
     const material = new MeshLambertMaterial( {color: 0x338dff} );
     const sphere = new Mesh( geometry, material );
@@ -252,7 +255,7 @@ function generateSphere(): Mesh {
     return sphere;
 }
 
-function generateCircle(): Mesh {
+function generateCircle(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new CircleGeometry( 5, 48 );
     const material = new MeshLambertMaterial( { color: 0xB0B000, side: DoubleSide } );
     const circle = new Mesh( geometry, material );
@@ -260,7 +263,7 @@ function generateCircle(): Mesh {
     return circle;
 }
 
-function generateTorusKnot(): Mesh {
+function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new TorusKnotGeometry( 10, 3, 100, 16 );
     const material = new MeshLambertMaterial( { color: 0x22ff88 } );
     const torusKnot = new Mesh( geometry, material );
