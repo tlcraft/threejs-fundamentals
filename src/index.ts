@@ -298,8 +298,8 @@ function addText(scene: Scene, text: string, position: Point): void {
             bevelEnabled: false
         });
 
-        var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-        var mesh = new Mesh( geometry, material );
+        const material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+        const mesh = new Mesh( geometry, material );
         mesh.position.z = position.z ? position.z : 0;
         mesh.position.y = position.y ? position.y : 0;
         mesh.position.x = position.x ? position.x : 0;
