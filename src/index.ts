@@ -350,10 +350,10 @@ function onKeyDown(event: any): void{
         case 68: // right D
             camera.position.x += 0.25;
             break;
-        case 38: // up
+        case 38: // up arrow
             camera.position.y += 0.25;
             break;
-        case 40: // down
+        case 40: // down arrow
             camera.position.y -= 0.25;
             break;
         default:
