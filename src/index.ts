@@ -13,6 +13,7 @@ import {
   FontLoader,
   Group,
   Mesh,
+  MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
   OctahedronGeometry,
@@ -24,13 +25,18 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
+  Texture,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
+import image from './crate.jpg';
+
+const debugGui = generateDebugGui();
 
 const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
@@ -45,6 +51,9 @@ container.appendChild( renderer.domElement );
 
 const cube = generateCube();
 scene.add(cube);
+
+const texturedCube = generateCubeWithTexture();
+scene.add(texturedCube);
 
 const mesh = generateBufferGeometry();
 scene.add(mesh);
@@ -80,7 +89,7 @@ const ambientLight = new AmbientLight( 0x404040 ); // soft white light
 scene.add( ambientLight );
 
 // Tween camera and object
-//gsap.to(knot.position, { duration: 3, delay: 6,  x: -60});
+gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
 //gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
 const clock = new Clock();
@@ -108,6 +117,47 @@ const animate = function () {
     controls.update();
     renderer.render( scene, camera );
 };
+
+configurDebugGui();
+
+function generateDebugGui(): dat.GUI {
+    const debugGui = new dat.GUI({ 
+        closed: true, 
+        width: 350,
+    });
+    debugGui.hide();
+    return debugGui;
+}
+
+function configurDebugGui(): void {
+    configureMeshDebug(cube, 'cube');
+    configureMeshDebug(texturedCube, 'textured cube');
+    configureMeshDebug(mesh, 'buffer mesh');
+    configureMeshDebug(plane, 'plane');
+    configureMeshDebug(sphere, 'sphere');
+    configureMeshDebug(circle, 'circle');
+    configureMeshDebug(knot, 'know');
+    configureMeshDebug(ring, 'ring');
+    configureMeshDebug(octahedron, 'octahedron');
+}
+
+function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial>, name: string): void {
+    const folder = debugGui.addFolder(`${name} section`);
+    folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
+    folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
+    folder.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('z-axis');
+
+    folder.add(mesh, 'visible');
+    folder.add(mesh.material, 'wireframe');
+
+    const parameters = {
+        color: mesh.material.color.getHex()
+    };
+
+    folder.addColor(parameters, 'color').onChange(() => {
+        mesh.material.color.set(parameters.color);
+    });
+}
 
 function moveRing(ring: Mesh): void {
     ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
@@ -147,7 +197,7 @@ function generateControls(): OrbitControls {
     return controls;
 }
 
-function generateCube(): Mesh {
+function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new BoxGeometry();
     const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
     const cube = new Mesh( geometry, material );
@@ -155,7 +205,22 @@ function generateCube(): Mesh {
     return cube;
 }
 
-function generateBufferGeometry(): Mesh {
+function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const crate = new Image();
+    crate.src = image;
+    crate.onload = () => {
+        texture.needsUpdate = true;
+    };
+
+    const geometry = new BoxGeometry();
+    const texture = new Texture(crate);
+    const material = new MeshBasicMaterial( { map: texture } );
+    const cube = new Mesh( geometry, material );
+    cube.position.x = 15;
+    return cube;
+}
+
+function generateBufferGeometry(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const numberOfTriangles = 2;
     const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
@@ -173,7 +238,7 @@ function generateBufferGeometry(): Mesh {
     return mesh;
 }
 
-function generatePlane(): Mesh {
+function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const planeGeometry = new PlaneGeometry( 60, 60 );
     const planeMaterial = new MeshLambertMaterial( {color: 0xff5733, side: DoubleSide} );
     const plane = new Mesh( planeGeometry, planeMaterial );
@@ -182,7 +247,7 @@ function generatePlane(): Mesh {
     return plane;
 }
 
-function generateSphere(): Mesh {
+function generateSphere(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new SphereGeometry( 5, 15, 15 );
     const material = new MeshLambertMaterial( {color: 0x338dff} );
     const sphere = new Mesh( geometry, material );
@@ -190,7 +255,7 @@ function generateSphere(): Mesh {
     return sphere;
 }
 
-function generateCircle(): Mesh {
+function generateCircle(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new CircleGeometry( 5, 48 );
     const material = new MeshLambertMaterial( { color: 0xB0B000, side: DoubleSide } );
     const circle = new Mesh( geometry, material );
@@ -198,7 +263,7 @@ function generateCircle(): Mesh {
     return circle;
 }
 
-function generateTorusKnot(): Mesh {
+function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new TorusKnotGeometry( 10, 3, 100, 16 );
     const material = new MeshLambertMaterial( { color: 0x22ff88 } );
     const torusKnot = new Mesh( geometry, material );
@@ -207,7 +272,7 @@ function generateTorusKnot(): Mesh {
     return torusKnot;
 }
 
-function generateRing(): Mesh {
+function generateRing(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new RingGeometry( 4.6, 5, 64 );
     const material = new MeshLambertMaterial( { color: 0x00ffff, side: DoubleSide } );
     const ring = new Mesh( geometry, material );
@@ -215,7 +280,7 @@ function generateRing(): Mesh {
     return ring;
 }
 
-function generateOctahedron(): Mesh {
+function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new OctahedronGeometry( 3 );
     const material = new MeshLambertMaterial( { color: 0x00ffff } );
     const octahedron = new Mesh( geometry, material );
@@ -233,8 +298,8 @@ function addText(scene: Scene, text: string, position: Point): void {
             bevelEnabled: false
         });
 
-        var material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-        var mesh = new Mesh( geometry, material );
+        const material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
+        const mesh = new Mesh( geometry, material );
         mesh.position.z = position.z ? position.z : 0;
         mesh.position.y = position.y ? position.y : 0;
         mesh.position.x = position.x ? position.x : 0;
@@ -285,10 +350,10 @@ function onKeyDown(event: any): void{
         case 68: // right D
             camera.position.x += 0.25;
             break;
-        case 38: // up
+        case 38: // up arrow
             camera.position.y += 0.25;
             break;
-        case 40: // down
+        case 40: // down arrow
             camera.position.y -= 0.25;
             break;
         default:
