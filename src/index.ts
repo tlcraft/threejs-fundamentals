@@ -36,8 +36,8 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
-import image from './crate.jpg';
-import ice from './ice.png';
+import image from './img/crate.jpg';
+import ice from './img/ice.png';
 
 const debugGui = generateDebugGui();
 
