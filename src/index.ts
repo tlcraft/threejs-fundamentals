@@ -25,7 +25,7 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
-  Texture,
+  TextureLoader,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
@@ -43,6 +43,7 @@ const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
 const controls = generateControls();
+const textureLoader = new TextureLoader();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
@@ -206,14 +207,8 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
-    const crate = new Image();
-    crate.src = image;
-    crate.onload = () => {
-        texture.needsUpdate = true;
-    };
-
     const geometry = new BoxGeometry();
-    const texture = new Texture(crate);
+    const texture = textureLoader.load(image);
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
