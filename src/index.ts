@@ -17,6 +17,7 @@ import {
   MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
+  NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
   PerspectiveCamera,
@@ -245,6 +246,7 @@ function generateCubeWithIceTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     texture.rotation = Math.PI / 4;
     texture.center.x = 0.5;
     texture.center.y = 0.5;
+    texture.minFilter = NearestFilter;
 
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
