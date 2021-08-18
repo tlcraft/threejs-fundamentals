@@ -28,6 +28,7 @@ import {
   SphereGeometry,
   TextGeometry,
   TextureLoader,
+  TorusGeometry,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
@@ -53,6 +54,14 @@ scene.add(axesHelper);
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
+
+const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff });
+
+const materialSphere = generateMaterialSphere();
+scene.add(materialSphere);
+
+const materialTorus = generateMaterialTorus();
+scene.add(materialTorus);
 
 const cube = generateCube();
 scene.add(cube);
@@ -110,6 +119,12 @@ const animate = function () {
     cube.rotation.y += delta;
 
     sphere.rotation.y += delta;
+
+    materialSphere.rotation.x += 0.12 * delta;
+    materialSphere.rotation.y += 0.2 * delta;
+
+    materialTorus.rotation.x +=  0.12 * delta;
+    materialTorus.rotation.y +=  0.2 * delta;
 
     // Alternative control schemes
     // camera.position.x = cursor.x * 100;
@@ -290,6 +305,16 @@ function generateSphere(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return sphere;
 }
 
+function generateMaterialSphere(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const materialSphere = new Mesh(
+        new SphereGeometry(0.5, 10, 16),
+        sharedMaterial
+    );
+    materialSphere.position.x = 5;
+    materialSphere.position.y = -5;
+    return materialSphere;
+}
+
 function generateCircle(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new CircleGeometry( 5, 48 );
     const material = new MeshLambertMaterial( { color: 0xB0B000, side: DoubleSide } );
@@ -305,6 +330,16 @@ function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
     torusKnot.position.set(-40, 10, -15);
     torusKnot.scale.set(0.5, 0.5, 0.5);
     return torusKnot;
+}
+
+function generateMaterialTorus(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const materialTorus = new Mesh(
+        new TorusGeometry(0.5, 0.2, 16, 32),
+        sharedMaterial
+    );
+    materialTorus.position.x = 1;
+    materialTorus.position.y = -5;
+    return materialTorus;
 }
 
 function generateRing(): Mesh<BufferGeometry, MeshLambertMaterial> {
