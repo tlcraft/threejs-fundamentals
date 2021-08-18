@@ -12,10 +12,12 @@ import {
   DoubleSide,
   FontLoader,
   Group,
+  LoadingManager,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
+  NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
   PerspectiveCamera,
@@ -25,7 +27,7 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
-  Texture,
+  TextureLoader,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
@@ -34,7 +36,8 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~point';
 import { Cursor } from '~cursor';
-import image from './crate.jpg';
+import image from './img/crate.jpg';
+import ice from './img/ice.png';
 
 const debugGui = generateDebugGui();
 
@@ -43,6 +46,8 @@ const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
 const controls = generateControls();
+const loadingManager = configureLoadingManager();
+const textureLoader = new TextureLoader(loadingManager);
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
@@ -54,6 +59,9 @@ scene.add(cube);
 
 const texturedCube = generateCubeWithTexture();
 scene.add(texturedCube);
+
+const texturedIceCube = generateCubeWithIceTexture();
+scene.add(texturedIceCube);
 
 const mesh = generateBufferGeometry();
 scene.add(mesh);
@@ -163,6 +171,24 @@ function moveRing(ring: Mesh): void {
     ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
 }
 
+function configureLoadingManager(): LoadingManager {
+    const loadingManager = new LoadingManager();
+    // Configure logging as needed
+    // loadingManager.onStart = () => {
+    //     console.log('onStart');
+    // };
+    // loadingManager.onLoad = () => {
+    //     console.log('onLoad');
+    // };
+    // loadingManager.onProgress = () => {
+    //     console.log('onProgress');
+    // };
+    // loadingManager.onError = () => {
+    //     console.log('onError');
+    // };
+    return loadingManager;
+}
+
 function generateScene(): Scene {
     const scene = new Scene();
     scene.background = new Color( 0xcccccc );
@@ -206,17 +232,26 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
-    const crate = new Image();
-    crate.src = image;
-    crate.onload = () => {
-        texture.needsUpdate = true;
-    };
-
     const geometry = new BoxGeometry();
-    const texture = new Texture(crate);
+    const texture = textureLoader.load(image);
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
+    return cube;
+}
+
+function generateCubeWithIceTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const geometry = new BoxGeometry();
+    const texture = textureLoader.load(ice);
+    texture.rotation = Math.PI / 4;
+    texture.center.x = 0.5;
+    texture.center.y = 0.5;
+    texture.minFilter = NearestFilter;
+
+    const material = new MeshBasicMaterial( { map: texture } );
+    const cube = new Mesh( geometry, material );
+    cube.position.x = 10;
+    cube.position.z = -5;
     return cube;
 }
 
