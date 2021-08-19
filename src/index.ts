@@ -35,8 +35,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
-import { Point } from '~point';
-import { Cursor } from '~cursor';
+import { Point } from '~models/point';
+import { Cursor } from '~models/cursor';
 import image from './img/crate.jpg';
 import ice from './img/ice.png';
 
