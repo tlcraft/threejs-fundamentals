@@ -60,6 +60,9 @@ const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff });
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
 
+const materialPlane = generateMaterialPlane();
+scene.add(materialPlane);
+
 const materialTorus = generateMaterialTorus();
 scene.add(materialTorus);
 
@@ -294,6 +297,15 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const plane = new Mesh( planeGeometry, planeMaterial );
     plane.position.set(0, -10, 0);
     plane.rotateX( - Math.PI / 2);
+    return plane;
+}
+
+function generateMaterialPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const plane = new Mesh( 
+        new PlaneGeometry( 2, 2 ),
+        sharedMaterial 
+    );
+    plane.position.set(10, -5, 0);
     return plane;
 }
 
