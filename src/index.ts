@@ -37,8 +37,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import image from './img/crate.jpg';
-import ice from './img/ice.png';
+import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -52,10 +51,20 @@ const textureLoader = new TextureLoader(loadingManager);
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
+const doorColorTexture = textureLoader.load(door);
+const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
+const doorHeightTexture = textureLoader.load(doorHeight);
+const doorMetalicTexture = textureLoader.load(doorMetallic);
+const doorNormalTexture = textureLoader.load(doorNormal);
+const doorOpacityTexture = textureLoader.load(doorOpacity);
+const doorRoughnessTexture = textureLoader.load(doorRoughness);
+const gradientTexture = textureLoader.load(gradient);
+
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
 const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff });
+sharedMaterial.map = gradientTexture;
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -251,7 +260,7 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
 
 function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     const geometry = new BoxGeometry();
-    const texture = textureLoader.load(image);
+    const texture = textureLoader.load(crate);
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
