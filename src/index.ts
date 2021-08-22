@@ -13,6 +13,7 @@ import {
   FontLoader,
   Group,
   LoadingManager,
+  Material,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
@@ -63,10 +64,7 @@ const gradientTexture = textureLoader.load(gradient);
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff, side: DoubleSide });
-sharedMaterial.map = gradientTexture;
-sharedMaterial.alphaMap = doorOpacityTexture;
-sharedMaterial.transparent = true;
+const sharedMaterial = generateBasicMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -250,6 +248,14 @@ function generateControls(): OrbitControls {
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableDamping = true;
     return controls;
+}
+
+function generateBasicMaterial(): Material {
+    const sharedMaterial = new MeshBasicMaterial({ side: DoubleSide });
+    sharedMaterial.map = doorColorTexture;
+    sharedMaterial.alphaMap = doorOpacityTexture;
+    sharedMaterial.transparent = true;
+    return sharedMaterial;
 }
 
 function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
