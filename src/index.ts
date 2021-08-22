@@ -63,8 +63,10 @@ const gradientTexture = textureLoader.load(gradient);
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff });
+const sharedMaterial = new MeshBasicMaterial({ color: 0x0011ff, side: DoubleSide });
 sharedMaterial.map = gradientTexture;
+sharedMaterial.alphaMap = doorOpacityTexture;
+sharedMaterial.transparent = true;
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
