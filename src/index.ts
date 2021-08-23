@@ -17,6 +17,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshNormalMaterial,
   MeshPhongMaterial,
   NearestFilter,
   OctahedronGeometry,
@@ -64,7 +65,7 @@ const gradientTexture = textureLoader.load(gradient);
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = generateBasicMaterial();
+const sharedMaterial = generateNormalMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -255,6 +256,13 @@ function generateBasicMaterial(): Material {
     sharedMaterial.map = doorColorTexture;
     sharedMaterial.alphaMap = doorOpacityTexture;
     sharedMaterial.transparent = true;
+    return sharedMaterial;
+}
+
+function generateNormalMaterial(): Material {
+    const sharedMaterial = new MeshNormalMaterial({ side: DoubleSide });
+    sharedMaterial.normalMap = doorNormalTexture;
+    sharedMaterial.flatShading = true;
     return sharedMaterial;
 }
 
