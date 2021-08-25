@@ -17,6 +17,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshMatcapMaterial,
   MeshNormalMaterial,
   MeshPhongMaterial,
   NearestFilter,
@@ -39,7 +40,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice } from '~img';
+import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -61,11 +62,12 @@ const doorNormalTexture = textureLoader.load(doorNormal);
 const doorOpacityTexture = textureLoader.load(doorOpacity);
 const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
+const matcapTexture = textureLoader.load(matcap)
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = generateNormalMaterial();
+const sharedMaterial = generateMatcapMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -263,6 +265,12 @@ function generateNormalMaterial(): Material {
     const sharedMaterial = new MeshNormalMaterial({ side: DoubleSide });
     sharedMaterial.normalMap = doorNormalTexture;
     sharedMaterial.flatShading = true;
+    return sharedMaterial;
+}
+
+function generateMatcapMaterial(): Material {
+    const sharedMaterial = new MeshMatcapMaterial({ side: DoubleSide });
+    sharedMaterial.matcap = matcapTexture;
     return sharedMaterial;
 }
 
