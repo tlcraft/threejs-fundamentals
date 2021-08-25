@@ -8,5 +8,6 @@ import doorOpacity from './door/Door_Wood_001_opacity.jpg';
 import doorRoughness from './door/Door_Wood_001_roughness.jpg';
 import gradient from './gradient.png';
 import ice from './ice.png';
+import matcap from './matcap/generator2.jpg';
 
-export { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice };
+export { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap };
