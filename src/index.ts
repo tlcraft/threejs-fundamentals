@@ -20,6 +20,7 @@ import {
   MeshMatcapMaterial,
   MeshNormalMaterial,
   MeshPhongMaterial,
+  MeshToonMaterial,
   NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
@@ -67,7 +68,7 @@ const matcapTexture = textureLoader.load(matcap)
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = generateMatcapMaterial();
+const sharedMaterial = generateToonMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -254,24 +255,29 @@ function generateControls(): OrbitControls {
 }
 
 function generateBasicMaterial(): Material {
-    const sharedMaterial = new MeshBasicMaterial({ side: DoubleSide });
-    sharedMaterial.map = doorColorTexture;
-    sharedMaterial.alphaMap = doorOpacityTexture;
-    sharedMaterial.transparent = true;
-    return sharedMaterial;
+    const material = new MeshBasicMaterial({ side: DoubleSide });
+    material.map = doorColorTexture;
+    material.alphaMap = doorOpacityTexture;
+    material.transparent = true;
+    return material;
 }
 
 function generateNormalMaterial(): Material {
-    const sharedMaterial = new MeshNormalMaterial({ side: DoubleSide });
-    sharedMaterial.normalMap = doorNormalTexture;
-    sharedMaterial.flatShading = true;
-    return sharedMaterial;
+    const material = new MeshNormalMaterial({ side: DoubleSide });
+    material.normalMap = doorNormalTexture;
+    material.flatShading = true;
+    return material;
 }
 
 function generateMatcapMaterial(): Material {
-    const sharedMaterial = new MeshMatcapMaterial({ side: DoubleSide });
-    sharedMaterial.matcap = matcapTexture;
-    return sharedMaterial;
+    const material = new MeshMatcapMaterial({ side: DoubleSide });
+    material.matcap = matcapTexture;
+    return material;
+}
+
+function generateToonMaterial(): Material {
+    const material = new MeshToonMaterial({side: DoubleSide});
+    return material;
 }
 
 function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
@@ -333,7 +339,7 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return plane;
 }
 
-function generateMaterialPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
+function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
     const plane = new Mesh( 
         new PlaneGeometry( 2, 2 ),
         sharedMaterial 
@@ -342,15 +348,17 @@ function generateMaterialPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
     return plane;
 }
 
-function generateSphere(): Mesh<BufferGeometry, MeshLambertMaterial> {
+function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
     const geometry = new SphereGeometry( 5, 15, 15 );
-    const material = new MeshLambertMaterial( {color: 0x338dff} );
+    const material = new MeshPhongMaterial( {color: 0x338dff} );
+    material.shininess = 50;
+    material.specular = new Color(0x0088ff);
     const sphere = new Mesh( geometry, material );
     sphere.position.set(-10, 0, 0);
     return sphere;
 }
 
-function generateMaterialSphere(): Mesh<BufferGeometry, MeshBasicMaterial> {
+function generateMaterialSphere(): Mesh<BufferGeometry, Material> {
     const materialSphere = new Mesh(
         new SphereGeometry(0.5, 10, 16),
         sharedMaterial
@@ -377,7 +385,7 @@ function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return torusKnot;
 }
 
-function generateMaterialTorus(): Mesh<BufferGeometry, MeshBasicMaterial> {
+function generateMaterialTorus(): Mesh<BufferGeometry, Material> {
     const materialTorus = new Mesh(
         new TorusGeometry(0.5, 0.2, 16, 32),
         sharedMaterial
