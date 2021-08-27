@@ -112,14 +112,14 @@ scene.add(octahedron);
 addText(scene, 'Hello three.js!', { x: -40, z: -60});
 addText(scene, 'Test', { x: -40, y: 30, z: -60});
 
-const light = generatePointLight();
-scene.add( light )
-
 const rocket = generateRocketGroup();
 scene.add(rocket);
 
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
-scene.add( ambientLight );
+scene.add(ambientLight);
+
+const light = generatePointLight();
+scene.add(light);
 
 // Tween camera and object
 gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
@@ -127,7 +127,7 @@ gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
 
 const clock = new Clock();
 const animate = function () {
-    requestAnimationFrame( animate );
+    requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
 
@@ -154,7 +154,7 @@ const animate = function () {
     moveRing(ring);
 
     controls.update();
-    renderer.render( scene, camera );
+    renderer.render(scene, camera);
 };
 
 configurDebugGui();
