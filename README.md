@@ -9,3 +9,7 @@ Sample project for learning more about three.js.
 ## Matcap Images
 
 [Source](https://bensimonds.com/2010/07/30/matcap-generator/)
+
+## Gradient Tone Images
+
+[Source](https://sbcode.net/threejs/meshtoonmaterial/)
