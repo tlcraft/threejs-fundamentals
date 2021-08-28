@@ -9,5 +9,6 @@ import doorRoughness from './door/Door_Wood_001_roughness.jpg';
 import gradient from './gradient.png';
 import ice from './ice.png';
 import matcap from './matcap/generator2.jpg';
+import fiveTone from './tones/fiveTone.jpg';
 
-export { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap };
+export { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone };
