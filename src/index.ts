@@ -185,9 +185,12 @@ function configurDebugGui(): void {
     configureMeshDebug(knot, 'know');
     configureMeshDebug(ring, 'ring');
     configureMeshDebug(octahedron, 'octahedron');
+    configureMeshDebug(materialSphere, 'material sphere');
+    configureMeshDebug(materialTorus, 'material torus');
+    configureMeshDebug(materialPlane, 'material plane');
 }
 
-function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial>, name: string): void {
+function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
     folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
     folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
@@ -196,13 +199,23 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     folder.add(mesh, 'visible');
     folder.add(mesh.material, 'wireframe');
 
-    const parameters = {
-        color: mesh.material.color.getHex()
-    };
+    if(mesh.material.hasOwnProperty('color')) {
+        const parameters = {
+            color: mesh.material.color.getHex()
+        };
+    
+        folder.addColor(parameters, 'color').onChange(() => {
+            mesh.material.color.set(parameters.color);
+        });
+    }
 
-    folder.addColor(parameters, 'color').onChange(() => {
-        mesh.material.color.set(parameters.color);
-    });
+    if(mesh.material.hasOwnProperty('metalness')) {
+        folder.add(mesh.material, 'metalness').min(0).max(1).step(0.001);
+    }
+
+    if(mesh.material.hasOwnProperty('roughness')) {
+        folder.add(mesh.material, 'roughness').min(0).max(1).step(0.001);
+    }
 }
 
 function moveRing(ring: Mesh): void {
