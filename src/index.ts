@@ -149,6 +149,9 @@ const animate = function () {
     materialTorus.rotation.x +=  0.12 * delta;
     materialTorus.rotation.y +=  0.2 * delta;
 
+    materialPlane.rotation.x +=  0.12 * delta;
+    materialPlane.rotation.y +=  0.2 * delta;
+
     // Alternative control schemes
     // camera.position.x = cursor.x * 100;
     // camera.position.y = cursor.y * 100;
@@ -215,6 +218,10 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
 
     if(mesh.material.hasOwnProperty('roughness')) {
         folder.add(mesh.material, 'roughness').min(0).max(1).step(0.001);
+    }
+
+    if(mesh.material.hasOwnProperty('aoMapIntensity')) {
+        folder.add(mesh.material, 'aoMapIntensity').min(0).max(10).step(0.001);
     }
 }
 
@@ -305,6 +312,9 @@ function generateStandardMaterial(): Material {
     const material = new MeshStandardMaterial({ side: DoubleSide });
     material.metalness = 0.55;
     material.roughness = 0.7;
+    material.map = doorColorTexture;
+    material.aoMap = doorAmbientOcclusionTexture;
+    material.aoMapIntensity = 2;
     return material;
 }
 
@@ -373,6 +383,10 @@ function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
         sharedMaterial 
     );
     plane.position.set(10, -5, 0);
+
+    plane.geometry.setAttribute(
+        'uv2', new BufferAttribute(plane.geometry.attributes.uv.array, 2)
+    );
     return plane;
 }
 
@@ -393,6 +407,9 @@ function generateMaterialSphere(): Mesh<BufferGeometry, Material> {
     );
     materialSphere.position.x = 5;
     materialSphere.position.y = -5;
+    materialSphere.geometry.setAttribute(
+        'uv2', new BufferAttribute(materialSphere.geometry.attributes.uv.array, 2)
+    );
     return materialSphere;
 }
 
@@ -420,6 +437,9 @@ function generateMaterialTorus(): Mesh<BufferGeometry, Material> {
     );
     materialTorus.position.x = 1;
     materialTorus.position.y = -5;
+    materialTorus.geometry.setAttribute(
+        'uv2', new BufferAttribute(materialTorus.geometry.attributes.uv.array, 2)
+    );
     return materialTorus;
 }
 
