@@ -20,6 +20,7 @@ import {
   MeshMatcapMaterial,
   MeshNormalMaterial,
   MeshPhongMaterial,
+  MeshStandardMaterial,
   MeshToonMaterial,
   NearestFilter,
   OctahedronGeometry,
@@ -41,7 +42,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap } from '~img';
+import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -63,12 +64,18 @@ const doorNormalTexture = textureLoader.load(doorNormal);
 const doorOpacityTexture = textureLoader.load(doorOpacity);
 const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
+
+const fiveToneTexture = textureLoader.load(fiveTone);
+fiveToneTexture.minFilter = NearestFilter;
+fiveToneTexture.magFilter = NearestFilter;
+fiveToneTexture.generateMipmaps = false;
+
 const matcapTexture = textureLoader.load(matcap)
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
 
-const sharedMaterial = generateToonMaterial();
+const sharedMaterial = generateStandardMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -276,7 +283,15 @@ function generateMatcapMaterial(): Material {
 }
 
 function generateToonMaterial(): Material {
-    const material = new MeshToonMaterial({side: DoubleSide});
+    const material = new MeshToonMaterial({ side: DoubleSide });
+    material.gradientMap = fiveToneTexture;
+    return material;
+}
+
+function generateStandardMaterial(): Material {
+    const material = new MeshStandardMaterial({ side: DoubleSide });
+    material.metalness = 0.55;
+    material.roughness = 0.7;
     return material;
 }
 
