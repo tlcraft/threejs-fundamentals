@@ -32,6 +32,7 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
+  Texture,
   TextureLoader,
   TorusGeometry,
   TorusKnotGeometry,
@@ -64,18 +65,12 @@ const doorNormalTexture = textureLoader.load(doorNormal);
 const doorOpacityTexture = textureLoader.load(doorOpacity);
 const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
-
-const fiveToneTexture = textureLoader.load(fiveTone);
-fiveToneTexture.minFilter = NearestFilter;
-fiveToneTexture.magFilter = NearestFilter;
-fiveToneTexture.generateMipmaps = false;
-
-const matcapTexture = textureLoader.load(matcap)
+const matcapTexture = textureLoader.load(matcap);
+const fiveToneTexture = loadFiveToneTexture();
+const sharedMaterial = generateStandardMaterial();
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
-
-const sharedMaterial = generateStandardMaterial();
 
 const materialSphere = generateMaterialSphere();
 scene.add(materialSphere);
@@ -167,6 +162,10 @@ const animate = function () {
     renderer.render(scene, camera);
 };
 
+function moveRing(ring: Mesh): void {
+    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
+
 configurDebugGui();
 
 function generateDebugGui(): dat.GUI {
@@ -229,10 +228,6 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     }
 }
 
-function moveRing(ring: Mesh): void {
-    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
-}
-
 function configureLoadingManager(): LoadingManager {
     const loadingManager = new LoadingManager();
     // Configure logging as needed
@@ -249,6 +244,14 @@ function configureLoadingManager(): LoadingManager {
     //     console.log('onError');
     // };
     return loadingManager;
+}
+
+function loadFiveToneTexture(): Texture {
+    const fiveToneTexture = textureLoader.load(fiveTone);
+    fiveToneTexture.minFilter = NearestFilter;
+    fiveToneTexture.magFilter = NearestFilter;
+    fiveToneTexture.generateMipmaps = false;
+    return fiveToneTexture;
 }
 
 function generateScene(): Scene {
@@ -407,16 +410,16 @@ function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
 }
 
 function generateMaterialSphere(): Mesh<BufferGeometry, Material> {
-    const materialSphere = new Mesh(
+    const sphere = new Mesh(
         new SphereGeometry(0.5, 10, 16),
         sharedMaterial
     );
-    materialSphere.position.x = 5;
-    materialSphere.position.y = -5;
-    materialSphere.geometry.setAttribute(
-        'uv2', new BufferAttribute(materialSphere.geometry.attributes.uv.array, 2)
+    sphere.position.x = 5;
+    sphere.position.y = -5;
+    sphere.geometry.setAttribute(
+        'uv2', new BufferAttribute(sphere.geometry.attributes.uv.array, 2)
     );
-    return materialSphere;
+    return sphere;
 }
 
 function generateCircle(): Mesh<BufferGeometry, MeshLambertMaterial> {
@@ -437,16 +440,16 @@ function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function generateMaterialTorus(): Mesh<BufferGeometry, Material> {
-    const materialTorus = new Mesh(
+    const torus = new Mesh(
         new TorusGeometry(0.5, 0.2, 64, 128),
         sharedMaterial
     );
-    materialTorus.position.x = 1;
-    materialTorus.position.y = -5;
-    materialTorus.geometry.setAttribute(
-        'uv2', new BufferAttribute(materialTorus.geometry.attributes.uv.array, 2)
+    torus.position.x = 1;
+    torus.position.y = -5;
+    torus.geometry.setAttribute(
+        'uv2', new BufferAttribute(torus.geometry.attributes.uv.array, 2)
     );
-    return materialTorus;
+    return torus;
 }
 
 function generateRing(): Mesh<BufferGeometry, MeshLambertMaterial> {
