@@ -223,6 +223,10 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     if(mesh.material.hasOwnProperty('aoMapIntensity')) {
         folder.add(mesh.material, 'aoMapIntensity').min(0).max(10).step(0.001);
     }
+        
+    if(mesh.material.hasOwnProperty('displacementScale')) {
+        folder.add(mesh.material, 'displacementScale').min(0).max(1).step(0.001);
+    }
 }
 
 function moveRing(ring: Mesh): void {
@@ -315,6 +319,8 @@ function generateStandardMaterial(): Material {
     material.map = doorColorTexture;
     material.aoMap = doorAmbientOcclusionTexture;
     material.aoMapIntensity = 2;
+    material.displacementMap = doorHeightTexture;
+    material.displacementScale = 0.05;
     return material;
 }
 
@@ -379,7 +385,7 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
 
 function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
     const plane = new Mesh( 
-        new PlaneGeometry( 2, 2 ),
+        new PlaneGeometry( 2, 2, 100, 100 ),
         sharedMaterial 
     );
     plane.position.set(10, -5, 0);
@@ -391,7 +397,7 @@ function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
 }
 
 function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
-    const geometry = new SphereGeometry( 5, 15, 15 );
+    const geometry = new SphereGeometry( 5, 64, 64 );
     const material = new MeshPhongMaterial( {color: 0x338dff} );
     material.shininess = 50;
     material.specular = new Color(0x0088ff);
@@ -432,7 +438,7 @@ function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
 
 function generateMaterialTorus(): Mesh<BufferGeometry, Material> {
     const materialTorus = new Mesh(
-        new TorusGeometry(0.5, 0.2, 16, 32),
+        new TorusGeometry(0.5, 0.2, 64, 128),
         sharedMaterial
     );
     materialTorus.position.x = 1;
