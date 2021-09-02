@@ -327,6 +327,7 @@ function generateStandardMaterial(): Material {
     material.metalnessMap = doorMetalicTexture;
     material.roughnessMap = doorRoughnessTexture;
     material.normalMap = doorNormalTexture;
+    material.normalScale.set(0.5, 0.5);
     return material;
 }
 
