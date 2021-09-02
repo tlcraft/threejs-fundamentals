@@ -317,13 +317,16 @@ function generateToonMaterial(): Material {
 
 function generateStandardMaterial(): Material {
     const material = new MeshStandardMaterial({ side: DoubleSide });
-    material.metalness = 0.55;
-    material.roughness = 0.7;
+    material.metalness = 0;
+    material.roughness = 1;
     material.map = doorColorTexture;
     material.aoMap = doorAmbientOcclusionTexture;
-    material.aoMapIntensity = 2;
+    material.aoMapIntensity = 1;
     material.displacementMap = doorHeightTexture;
     material.displacementScale = 0.05;
+    material.metalnessMap = doorMetalicTexture;
+    material.roughnessMap = doorRoughnessTexture;
+    material.normalMap = doorNormalTexture;
     return material;
 }
 
