@@ -328,6 +328,8 @@ function generateStandardMaterial(): Material {
     material.roughnessMap = doorRoughnessTexture;
     material.normalMap = doorNormalTexture;
     material.normalScale.set(0.5, 0.5);
+    material.transparent = true;
+    material.alphaMap = doorOpacityTexture;
     return material;
 }
 
