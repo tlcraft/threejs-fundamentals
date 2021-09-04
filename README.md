@@ -13,3 +13,12 @@ Sample project for learning more about three.js.
 ## Gradient Tone Images
 
 [Source](https://sbcode.net/threejs/meshtoonmaterial/)
+
+## Cloud Skybox Imges
+
+[Source](https://opengameart.org/content/clouds-skybox-1)
+
+## Resources
+
+[Poly Haven](https://polyhaven.com/)  
+[HDRI to CubeMap](https://matheowis.github.io/HDRI-to-CubeMap/)
