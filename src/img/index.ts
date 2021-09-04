@@ -1,3 +1,9 @@
+import clouds_down from './clouds/clouds_down.bmp';
+import clouds_east from './clouds/clouds_east.bmp';
+import clouds_north from './clouds/clouds_north.bmp';
+import clouds_south from './clouds/clouds_south.bmp';
+import clouds_up from './clouds/clouds_up.bmp';
+import clouds_west from './clouds/clouds_west.bmp';
 import crate from './crate.jpg';
 import door from './door/Door_Wood_001_basecolor.jpg';
 import doorAmbientOcclusion from './door/Door_Wood_001_ambientOcclusion.jpg';
@@ -11,4 +17,4 @@ import ice from './ice.png';
 import matcap from './matcap/generator2.jpg';
 import fiveTone from './tones/fiveTone.jpg';
 
-export { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone };
+export { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone };
