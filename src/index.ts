@@ -8,6 +8,7 @@ import {
   Clock,
   Color,
   ConeGeometry,
+  CubeTextureLoader,
   CylinderGeometry,
   DoubleSide,
   FontLoader,
@@ -43,7 +44,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -54,6 +55,7 @@ const renderer = generateRenderer();
 const controls = generateControls();
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
+const cubeTextureLoader = new CubeTextureLoader();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
@@ -67,7 +69,16 @@ const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
 const matcapTexture = textureLoader.load(matcap);
 const fiveToneTexture = loadFiveToneTexture();
-const sharedMaterial = generateStandardMaterial();
+const environmentMapTexture = cubeTextureLoader.load([
+    clouds_east,    // positive x
+    clouds_west,    // negative x
+    clouds_up,      // positive y
+    clouds_down,    // negative y
+    clouds_north,   // positive z
+    clouds_south    // negative z
+]);
+
+const sharedMaterial = generateEnvironmentMaterial();
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -330,6 +341,14 @@ function generateStandardMaterial(): Material {
     material.normalScale.set(0.5, 0.5);
     material.transparent = true;
     material.alphaMap = doorOpacityTexture;
+    return material;
+}
+
+function generateEnvironmentMaterial(): Material {
+    const material = new MeshStandardMaterial({ side: DoubleSide });
+    material.metalness = 0.92;
+    material.roughness = 0.05;
+    material.envMap = environmentMapTexture;
     return material;
 }
 
