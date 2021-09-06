@@ -8,15 +8,21 @@ import {
   Clock,
   Color,
   ConeGeometry,
+  CubeTextureLoader,
   CylinderGeometry,
   DoubleSide,
   FontLoader,
   Group,
   LoadingManager,
+  Material,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshMatcapMaterial,
+  MeshNormalMaterial,
   MeshPhongMaterial,
+  MeshStandardMaterial,
+  MeshToonMaterial,
   NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
@@ -27,17 +33,18 @@ import {
   Scene,
   SphereGeometry,
   TextGeometry,
+  Texture,
   TextureLoader,
+  TorusGeometry,
   TorusKnotGeometry,
   WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
-import { Point } from '~point';
-import { Cursor } from '~cursor';
-import image from './img/crate.jpg';
-import ice from './img/ice.png';
+import { Point } from '~models/point';
+import { Cursor } from '~models/cursor';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -48,11 +55,45 @@ const renderer = generateRenderer();
 const controls = generateControls();
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
+const cubeTextureLoader = new CubeTextureLoader();
 const axesHelper = new AxesHelper();
 scene.add(axesHelper);
 
+const doorColorTexture = textureLoader.load(door);
+const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
+const doorHeightTexture = textureLoader.load(doorHeight);
+const doorMetalicTexture = textureLoader.load(doorMetallic);
+const doorNormalTexture = textureLoader.load(doorNormal);
+const doorOpacityTexture = textureLoader.load(doorOpacity);
+const doorRoughnessTexture = textureLoader.load(doorRoughness);
+const gradientTexture = textureLoader.load(gradient);
+const matcapTexture = textureLoader.load(matcap);
+const fiveToneTexture = loadFiveToneTexture();
+const environmentMapTexture = cubeTextureLoader.load([
+    clouds_east,    // positive x
+    clouds_west,    // negative x
+    clouds_up,      // positive y
+    clouds_down,    // negative y
+    clouds_north,   // positive z
+    clouds_south    // negative z
+]);
+
+const sharedMaterial = generateEnvironmentMaterial();
+
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
+
+const materialSphere = generateMaterialSphere();
+scene.add(materialSphere);
+
+const materialPlane = generateMaterialPlane();
+scene.add(materialPlane);
+
+const materialTorus = generateMaterialTorus();
+scene.add(materialTorus);
+
+const gradientSphere = generateGradientSphere();
+scene.add(gradientSphere);
 
 const cube = generateCube();
 scene.add(cube);
@@ -87,14 +128,14 @@ scene.add(octahedron);
 addText(scene, 'Hello three.js!', { x: -40, z: -60});
 addText(scene, 'Test', { x: -40, y: 30, z: -60});
 
-const light = generatePointLight();
-scene.add( light )
-
 const rocket = generateRocketGroup();
 scene.add(rocket);
 
 const ambientLight = new AmbientLight( 0x404040 ); // soft white light
-scene.add( ambientLight );
+scene.add(ambientLight);
+
+const light = generatePointLight();
+scene.add(light);
 
 // Tween camera and object
 gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
@@ -102,7 +143,7 @@ gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
 
 const clock = new Clock();
 const animate = function () {
-    requestAnimationFrame( animate );
+    requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
 
@@ -110,6 +151,15 @@ const animate = function () {
     cube.rotation.y += delta;
 
     sphere.rotation.y += delta;
+
+    materialSphere.rotation.x += 0.12 * delta;
+    materialSphere.rotation.y += 0.2 * delta;
+
+    materialTorus.rotation.x +=  0.12 * delta;
+    materialTorus.rotation.y +=  0.2 * delta;
+
+    materialPlane.rotation.x +=  0.12 * delta;
+    materialPlane.rotation.y +=  0.2 * delta;
 
     // Alternative control schemes
     // camera.position.x = cursor.x * 100;
@@ -123,8 +173,12 @@ const animate = function () {
     moveRing(ring);
 
     controls.update();
-    renderer.render( scene, camera );
+    renderer.render(scene, camera);
 };
+
+function moveRing(ring: Mesh): void {
+    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
 
 configurDebugGui();
 
@@ -147,9 +201,12 @@ function configurDebugGui(): void {
     configureMeshDebug(knot, 'know');
     configureMeshDebug(ring, 'ring');
     configureMeshDebug(octahedron, 'octahedron');
+    configureMeshDebug(materialSphere, 'material sphere');
+    configureMeshDebug(materialTorus, 'material torus');
+    configureMeshDebug(materialPlane, 'material plane');
 }
 
-function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial>, name: string): void {
+function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
     folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
     folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
@@ -158,17 +215,31 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     folder.add(mesh, 'visible');
     folder.add(mesh.material, 'wireframe');
 
-    const parameters = {
-        color: mesh.material.color.getHex()
-    };
+    if(mesh.material.hasOwnProperty('color')) {
+        const parameters = {
+            color: mesh.material.color.getHex()
+        };
+    
+        folder.addColor(parameters, 'color').onChange(() => {
+            mesh.material.color.set(parameters.color);
+        });
+    }
 
-    folder.addColor(parameters, 'color').onChange(() => {
-        mesh.material.color.set(parameters.color);
-    });
-}
+    if(mesh.material.hasOwnProperty('metalness')) {
+        folder.add(mesh.material, 'metalness').min(0).max(1).step(0.001);
+    }
 
-function moveRing(ring: Mesh): void {
-    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+    if(mesh.material.hasOwnProperty('roughness')) {
+        folder.add(mesh.material, 'roughness').min(0).max(1).step(0.001);
+    }
+
+    if(mesh.material.hasOwnProperty('aoMapIntensity')) {
+        folder.add(mesh.material, 'aoMapIntensity').min(0).max(10).step(0.001);
+    }
+        
+    if(mesh.material.hasOwnProperty('displacementScale')) {
+        folder.add(mesh.material, 'displacementScale').min(0).max(1).step(0.001);
+    }
 }
 
 function configureLoadingManager(): LoadingManager {
@@ -187,6 +258,14 @@ function configureLoadingManager(): LoadingManager {
     //     console.log('onError');
     // };
     return loadingManager;
+}
+
+function loadFiveToneTexture(): Texture {
+    const fiveToneTexture = textureLoader.load(fiveTone);
+    fiveToneTexture.minFilter = NearestFilter;
+    fiveToneTexture.magFilter = NearestFilter;
+    fiveToneTexture.generateMipmaps = false;
+    return fiveToneTexture;
 }
 
 function generateScene(): Scene {
@@ -223,6 +302,59 @@ function generateControls(): OrbitControls {
     return controls;
 }
 
+function generateBasicMaterial(): Material {
+    const material = new MeshBasicMaterial({ side: DoubleSide });
+    material.map = doorColorTexture;
+    material.alphaMap = doorOpacityTexture;
+    material.transparent = true;
+    return material;
+}
+
+function generateNormalMaterial(): Material {
+    const material = new MeshNormalMaterial({ side: DoubleSide });
+    material.normalMap = doorNormalTexture;
+    material.flatShading = true;
+    return material;
+}
+
+function generateMatcapMaterial(): Material {
+    const material = new MeshMatcapMaterial({ side: DoubleSide });
+    material.matcap = matcapTexture;
+    return material;
+}
+
+function generateToonMaterial(): Material {
+    const material = new MeshToonMaterial({ side: DoubleSide });
+    material.gradientMap = fiveToneTexture;
+    return material;
+}
+
+function generateStandardMaterial(): Material {
+    const material = new MeshStandardMaterial({ side: DoubleSide });
+    material.metalness = 0;
+    material.roughness = 1;
+    material.map = doorColorTexture;
+    material.aoMap = doorAmbientOcclusionTexture;
+    material.aoMapIntensity = 1;
+    material.displacementMap = doorHeightTexture;
+    material.displacementScale = 0.05;
+    material.metalnessMap = doorMetalicTexture;
+    material.roughnessMap = doorRoughnessTexture;
+    material.normalMap = doorNormalTexture;
+    material.normalScale.set(0.5, 0.5);
+    material.transparent = true;
+    material.alphaMap = doorOpacityTexture;
+    return material;
+}
+
+function generateEnvironmentMaterial(): Material {
+    const material = new MeshStandardMaterial({ side: DoubleSide });
+    material.metalness = 0.92;
+    material.roughness = 0.05;
+    material.envMap = environmentMapTexture;
+    return material;
+}
+
 function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const geometry = new BoxGeometry();
     const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
@@ -233,7 +365,7 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
 
 function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     const geometry = new BoxGeometry();
-    const texture = textureLoader.load(image);
+    const texture = textureLoader.load(crate);
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
@@ -282,11 +414,49 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return plane;
 }
 
-function generateSphere(): Mesh<BufferGeometry, MeshLambertMaterial> {
-    const geometry = new SphereGeometry( 5, 15, 15 );
-    const material = new MeshLambertMaterial( {color: 0x338dff} );
+function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
+    const plane = new Mesh( 
+        new PlaneGeometry( 2, 2, 100, 100 ),
+        sharedMaterial 
+    );
+    plane.position.set(10, -5, 0);
+
+    plane.geometry.setAttribute(
+        'uv2', new BufferAttribute(plane.geometry.attributes.uv.array, 2)
+    );
+    return plane;
+}
+
+function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
+    const geometry = new SphereGeometry( 5, 64, 64 );
+    const material = new MeshPhongMaterial( {color: 0x338dff} );
+    material.shininess = 50;
+    material.specular = new Color(0x0088ff);
     const sphere = new Mesh( geometry, material );
     sphere.position.set(-10, 0, 0);
+    return sphere;
+}
+
+function generateMaterialSphere(): Mesh<BufferGeometry, Material> {
+    const sphere = new Mesh(
+        new SphereGeometry(0.5, 10, 16),
+        sharedMaterial
+    );
+    sphere.position.x = 5;
+    sphere.position.y = -5;
+    sphere.geometry.setAttribute(
+        'uv2', new BufferAttribute(sphere.geometry.attributes.uv.array, 2)
+    );
+    return sphere;
+}
+
+function generateGradientSphere(): Mesh {
+    const sphere = new Mesh(
+        new SphereGeometry(0.5, 10, 16),
+        new MeshLambertMaterial({ map: gradientTexture })
+    );
+    sphere.position.set(15, -2, 5);
+
     return sphere;
 }
 
@@ -305,6 +475,19 @@ function generateTorusKnot(): Mesh<BufferGeometry, MeshLambertMaterial> {
     torusKnot.position.set(-40, 10, -15);
     torusKnot.scale.set(0.5, 0.5, 0.5);
     return torusKnot;
+}
+
+function generateMaterialTorus(): Mesh<BufferGeometry, Material> {
+    const torus = new Mesh(
+        new TorusGeometry(0.5, 0.2, 64, 128),
+        sharedMaterial
+    );
+    torus.position.x = 1;
+    torus.position.y = -5;
+    torus.geometry.setAttribute(
+        'uv2', new BufferAttribute(torus.geometry.attributes.uv.array, 2)
+    );
+    return torus;
 }
 
 function generateRing(): Mesh<BufferGeometry, MeshLambertMaterial> {
