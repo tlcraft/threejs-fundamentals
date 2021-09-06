@@ -92,6 +92,9 @@ scene.add(materialPlane);
 const materialTorus = generateMaterialTorus();
 scene.add(materialTorus);
 
+const gradientSphere = generateGradientSphere();
+scene.add(gradientSphere);
+
 const cube = generateCube();
 scene.add(cube);
 
@@ -444,6 +447,16 @@ function generateMaterialSphere(): Mesh<BufferGeometry, Material> {
     sphere.geometry.setAttribute(
         'uv2', new BufferAttribute(sphere.geometry.attributes.uv.array, 2)
     );
+    return sphere;
+}
+
+function generateGradientSphere(): Mesh {
+    const sphere = new Mesh(
+        new SphereGeometry(0.5, 10, 16),
+        new MeshLambertMaterial({ map: gradientTexture })
+    );
+    sphere.position.set(15, -2, 5);
+
     return sphere;
 }
 
