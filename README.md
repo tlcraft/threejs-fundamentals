@@ -18,7 +18,11 @@ Sample project for learning more about three.js.
 
 [Source](https://opengameart.org/content/clouds-skybox-1)
 
-## Resources
+### Resources
 
 [Poly Haven](https://polyhaven.com/)  
 [HDRI to CubeMap](https://matheowis.github.io/HDRI-to-CubeMap/)
+
+## Font
+
+[Facetype.js](https://gero3.github.io/facetype.js/)
