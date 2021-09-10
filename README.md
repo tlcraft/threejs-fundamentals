@@ -10,6 +10,10 @@ Sample project for learning more about three.js.
 
 [Source](https://bensimonds.com/2010/07/30/matcap-generator/)
 
+### Matcap Resources
+
+[nidorx](https://github.com/nidorx/matcaps)
+
 ## Gradient Tone Images
 
 [Source](https://sbcode.net/threejs/meshtoonmaterial/)
@@ -18,7 +22,7 @@ Sample project for learning more about three.js.
 
 [Source](https://opengameart.org/content/clouds-skybox-1)
 
-### Resources
+### Skybox Resources
 
 [Poly Haven](https://polyhaven.com/)  
 [HDRI to CubeMap](https://matheowis.github.io/HDRI-to-CubeMap/)
