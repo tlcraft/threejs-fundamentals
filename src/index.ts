@@ -126,8 +126,8 @@ scene.add(ring);
 const octahedron = generateOctahedron();
 scene.add(octahedron);
 
-addText(scene, 'Hello three.js!', { x: -40, z: -60});
-addText(scene, 'Test', { x: -40, y: 30, z: -60});
+addText(scene, 'Hello three.js!', { x: -20, z: -60});
+addText(scene, 'Test', { x: -20, y: 30, z: -60});
 
 const rocket = generateRocketGroup();
 scene.add(rocket);
@@ -522,6 +522,8 @@ function addText(scene: Scene, text: string, position: Point): void {
                 bevelSegments: 5
             }
         );
+
+        geometry.center();
 
         const material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff, wireframe: true } );
         const mesh = new Mesh( geometry, material );
