@@ -44,7 +44,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
 
 const debugGui = generateDebugGui();
 
@@ -69,6 +69,7 @@ const doorOpacityTexture = textureLoader.load(doorOpacity);
 const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
 const matcapTexture = textureLoader.load(matcap);
+const matcapBlueTexture = textureLoader.load(matcapBlue);
 const fiveToneTexture = loadFiveToneTexture();
 const environmentMapTexture = cubeTextureLoader.load([
     clouds_east,    // positive x
@@ -525,7 +526,7 @@ function addText(scene: Scene, text: string, position: Point): void {
 
         geometry.center();
 
-        const material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff, wireframe: true } );
+        const material = new MeshMatcapMaterial( { matcap: matcapBlueTexture } );
         const mesh = new Mesh( geometry, material );
         mesh.position.z = position.z ? position.z : 0;
         mesh.position.y = position.y ? position.y : 0;
