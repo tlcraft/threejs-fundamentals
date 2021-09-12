@@ -35,6 +35,7 @@ import {
   TextGeometry,
   Texture,
   TextureLoader,
+  TorusBufferGeometry,
   TorusGeometry,
   TorusKnotGeometry,
   WebGLRenderer
@@ -81,6 +82,21 @@ const environmentMapTexture = cubeTextureLoader.load([
 ]);
 
 const sharedMaterial = generateEnvironmentMaterial();
+
+for(let i = 0; i < 100; i++) {
+    const geometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
+    const material = new MeshMatcapMaterial({matcap: matcapBlueTexture});
+    const torus = new Mesh(geometry, material);
+
+    torus.position.x = (Math.random() - 0.5) * 20;
+    torus.position.y = (Math.random() - 0.5) * 20;
+    torus.position.z = (Math.random() - 2) * 20;
+
+    torus.rotation.x = Math.random() * Math.PI;
+    torus.rotation.y = Math.random() * Math.PI;
+
+    scene.add(torus);
+}
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
