@@ -83,10 +83,11 @@ const environmentMapTexture = cubeTextureLoader.load([
 
 const sharedMaterial = generateEnvironmentMaterial();
 
+const torusGeometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
+const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
+
 for(let i = 0; i < 100; i++) {
-    const geometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
-    const material = new MeshMatcapMaterial({matcap: matcapBlueTexture});
-    const torus = new Mesh(geometry, material);
+    const torus = new Mesh(torusGeometry, matcapMaterial);
 
     torus.position.x = (Math.random() - 0.5) * 20;
     torus.position.y = (Math.random() - 0.5) * 20;
@@ -94,6 +95,9 @@ for(let i = 0; i < 100; i++) {
 
     torus.rotation.x = Math.random() * Math.PI;
     torus.rotation.y = Math.random() * Math.PI;
+
+    const scale = Math.random();
+    torus.scale.set(scale, scale, scale);
 
     scene.add(torus);
 }
@@ -542,8 +546,7 @@ function addText(scene: Scene, text: string, position: Point): void {
 
         geometry.center();
 
-        const material = new MeshMatcapMaterial( { matcap: matcapBlueTexture } );
-        const mesh = new Mesh( geometry, material );
+        const mesh = new Mesh( geometry, matcapMaterial );
         mesh.position.z = position.z ? position.z : 0;
         mesh.position.y = position.y ? position.y : 0;
         mesh.position.x = position.x ? position.x : 0;
