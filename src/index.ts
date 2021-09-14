@@ -82,25 +82,9 @@ const environmentMapTexture = cubeTextureLoader.load([
 ]);
 
 const sharedMaterial = generateEnvironmentMaterial();
-
-const torusGeometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
-for(let i = 0; i < 100; i++) {
-    const torus = new Mesh(torusGeometry, matcapMaterial);
-
-    torus.position.x = (Math.random() - 0.5) * 20;
-    torus.position.y = (Math.random() - 0.5) * 20;
-    torus.position.z = (Math.random() - 2) * 20;
-
-    torus.rotation.x = Math.random() * Math.PI;
-    torus.rotation.y = Math.random() * Math.PI;
-
-    const scale = Math.random();
-    torus.scale.set(scale, scale, scale);
-
-    scene.add(torus);
-}
+addTorusesToScene(scene);
 
 const container: HTMLElement | any = document.getElementById("three");
 container.appendChild( renderer.domElement );
@@ -375,6 +359,26 @@ function generateEnvironmentMaterial(): Material {
     material.roughness = 0.05;
     material.envMap = environmentMapTexture;
     return material;
+}
+
+function addTorusesToScene(scene: Scene): void {
+    const torusGeometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
+
+    for(let i = 0; i < 100; i++) {
+        const torus = new Mesh(torusGeometry, matcapMaterial);
+
+        torus.position.x = (Math.random() - 0.5) * 20;
+        torus.position.y = (Math.random() - 0.5) * 20;
+        torus.position.z = (Math.random() - 2) * 20;
+
+        torus.rotation.x = Math.random() * Math.PI;
+        torus.rotation.y = Math.random() * Math.PI;
+
+        const scale = Math.random();
+        torus.scale.set(scale, scale, scale);
+
+        scene.add(torus);
+    }
 }
 
 function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
