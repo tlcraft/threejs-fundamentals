@@ -49,6 +49,7 @@ import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds
 
 const debugGui = generateDebugGui();
 
+const clock = new Clock();
 const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
 const camera = generatePerspectivCamera();
@@ -84,120 +85,104 @@ const environmentMapTexture = cubeTextureLoader.load([
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
-addTorusesToScene(scene);
+function startup(): void {
+    addTorusesToScene(scene);
 
-const container: HTMLElement | any = document.getElementById("three");
-container.appendChild( renderer.domElement );
+    const container: HTMLElement | any = document.getElementById("three");
+    container.appendChild( renderer.domElement );
 
-const materialSphere = generateMaterialSphere();
-scene.add(materialSphere);
+    const materialSphere = generateMaterialSphere();
+    scene.add(materialSphere);
 
-const materialPlane = generateMaterialPlane();
-scene.add(materialPlane);
+    const materialPlane = generateMaterialPlane();
+    scene.add(materialPlane);
 
-const materialTorus = generateMaterialTorus();
-scene.add(materialTorus);
+    const materialTorus = generateMaterialTorus();
+    scene.add(materialTorus);
 
-const gradientSphere = generateGradientSphere();
-scene.add(gradientSphere);
+    const gradientSphere = generateGradientSphere();
+    scene.add(gradientSphere);
 
-const cube = generateCube();
-scene.add(cube);
+    const cube = generateCube();
+    scene.add(cube);
 
-const texturedCube = generateCubeWithTexture();
-scene.add(texturedCube);
+    const texturedCube = generateCubeWithTexture();
+    scene.add(texturedCube);
 
-const texturedIceCube = generateCubeWithIceTexture();
-scene.add(texturedIceCube);
+    const texturedIceCube = generateCubeWithIceTexture();
+    scene.add(texturedIceCube);
 
-const mesh = generateBufferGeometry();
-scene.add(mesh);
+    const mesh = generateBufferGeometry();
+    scene.add(mesh);
 
-const plane = generatePlane();
-scene.add(plane);
+    const plane = generatePlane();
+    scene.add(plane);
 
-const sphere = generateSphere();
-scene.add(sphere);
+    const sphere = generateSphere();
+    scene.add(sphere);
 
-const circle = generateCircle();
-scene.add(circle);
+    const circle = generateCircle();
+    scene.add(circle);
 
-const knot = generateTorusKnot();
-scene.add(knot);
+    const knot = generateTorusKnot();
+    scene.add(knot);
 
-const ring = generateRing();
-scene.add(ring);
+    const ring = generateRing();
+    scene.add(ring);
 
-const octahedron = generateOctahedron();
-scene.add(octahedron);
+    const octahedron = generateOctahedron();
+    scene.add(octahedron);
 
-addText(scene, 'Hello three.js!', { x: -20, z: -60});
-addText(scene, 'Test', { x: -20, y: 30, z: -60});
+    addText(scene, 'Hello three.js!', { x: -20, z: -60});
+    addText(scene, 'Test', { x: -20, y: 30, z: -60});
 
-const rocket = generateRocketGroup();
-scene.add(rocket);
+    const rocket = generateRocketGroup();
+    scene.add(rocket);
 
-const ambientLight = new AmbientLight( 0x404040 ); // soft white light
-scene.add(ambientLight);
+    const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+    scene.add(ambientLight);
 
-const light = generatePointLight();
-scene.add(light);
+    const light = generatePointLight();
+    scene.add(light);
 
-// Tween camera and object
-gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
-//gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
+    // Tween camera and object
+    gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
+    //gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
-const clock = new Clock();
-const animate = function () {
-    requestAnimationFrame(animate);
+    const animate = function () {
+        requestAnimationFrame(animate);
 
-    const delta = clock.getDelta();
+        const delta = clock.getDelta();
 
-    cube.rotation.x += delta;
-    cube.rotation.y += delta;
+        cube.rotation.x += delta;
+        cube.rotation.y += delta;
 
-    sphere.rotation.y += delta;
+        sphere.rotation.y += delta;
 
-    materialSphere.rotation.x += 0.12 * delta;
-    materialSphere.rotation.y += 0.2 * delta;
+        materialSphere.rotation.x += 0.12 * delta;
+        materialSphere.rotation.y += 0.2 * delta;
 
-    materialTorus.rotation.x +=  0.12 * delta;
-    materialTorus.rotation.y +=  0.2 * delta;
+        materialTorus.rotation.x +=  0.12 * delta;
+        materialTorus.rotation.y +=  0.2 * delta;
 
-    materialPlane.rotation.x +=  0.12 * delta;
-    materialPlane.rotation.y +=  0.2 * delta;
+        materialPlane.rotation.x +=  0.12 * delta;
+        materialPlane.rotation.y +=  0.2 * delta;
 
-    // Alternative control schemes
-    // camera.position.x = cursor.x * 100;
-    // camera.position.y = cursor.y * 100;
-    
-    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
-    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-    // camera.position.y = cursor.y * 5;
-    // camera.lookAt(axesHelper.position);
+        // Alternative control schemes
+        // camera.position.x = cursor.x * 100;
+        // camera.position.y = cursor.y * 100;
+        
+        // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+        // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+        // camera.position.y = cursor.y * 5;
+        // camera.lookAt(axesHelper.position);
 
-    moveRing(ring);
+        moveRing(ring);
 
-    controls.update();
-    renderer.render(scene, camera);
-};
+        controls.update();
+        renderer.render(scene, camera);
+    };
 
-function moveRing(ring: Mesh): void {
-    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
-}
-
-configurDebugGui();
-
-function generateDebugGui(): dat.GUI {
-    const debugGui = new dat.GUI({ 
-        closed: true, 
-        width: 350,
-    });
-    debugGui.hide();
-    return debugGui;
-}
-
-function configurDebugGui(): void {
     configureMeshDebug(cube, 'cube');
     configureMeshDebug(texturedCube, 'textured cube');
     configureMeshDebug(mesh, 'buffer mesh');
@@ -210,6 +195,21 @@ function configurDebugGui(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
+
+    animate();
+}
+
+function moveRing(ring: Mesh): void {
+    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
+
+function generateDebugGui(): dat.GUI {
+    const debugGui = new dat.GUI({ 
+        closed: true, 
+        width: 350,
+    });
+    debugGui.hide();
+    return debugGui;
 }
 
 function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
@@ -643,4 +643,4 @@ window.addEventListener('dblclick', () => {
     }
 });
 
-animate();
+startup();
