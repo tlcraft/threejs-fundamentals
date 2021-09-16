@@ -54,13 +54,11 @@ const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
-const controls = generateControls();
+
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader();
 const fontLoader = new FontLoader();
-const axesHelper = new AxesHelper();
-scene.add(axesHelper);
 
 const doorColorTexture = textureLoader.load(door);
 const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
@@ -86,6 +84,10 @@ const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
 function startup(): void {
+    const controls = generateControls();
+    const axesHelper = new AxesHelper();
+    scene.add(axesHelper);
+
     addTorusesToScene(scene);
 
     const container: HTMLElement | any = document.getElementById("three");
