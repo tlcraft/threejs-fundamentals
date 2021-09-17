@@ -35,6 +35,7 @@ import {
   TextGeometry,
   Texture,
   TextureLoader,
+  TorusBufferGeometry,
   TorusGeometry,
   TorusKnotGeometry,
   WebGLRenderer
@@ -44,20 +45,20 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, fiveTone } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
 
 const debugGui = generateDebugGui();
 
+const clock = new Clock();
 const cursor: Cursor = { x: 1, y: 1 };
 const scene = generateScene();
 const camera = generatePerspectivCamera();
 const renderer = generateRenderer();
-const controls = generateControls();
+
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader();
-const axesHelper = new AxesHelper();
-scene.add(axesHelper);
+const fontLoader = new FontLoader();
 
 const doorColorTexture = textureLoader.load(door);
 const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
@@ -68,6 +69,7 @@ const doorOpacityTexture = textureLoader.load(doorOpacity);
 const doorRoughnessTexture = textureLoader.load(doorRoughness);
 const gradientTexture = textureLoader.load(gradient);
 const matcapTexture = textureLoader.load(matcap);
+const matcapBlueTexture = textureLoader.load(matcapBlue);
 const fiveToneTexture = loadFiveToneTexture();
 const environmentMapTexture = cubeTextureLoader.load([
     clouds_east,    // positive x
@@ -79,119 +81,110 @@ const environmentMapTexture = cubeTextureLoader.load([
 ]);
 
 const sharedMaterial = generateEnvironmentMaterial();
+const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
-const container: HTMLElement | any = document.getElementById("three");
-container.appendChild( renderer.domElement );
+function startup(): void {
+    const controls = generateControls();
+    const axesHelper = new AxesHelper();
+    scene.add(axesHelper);
 
-const materialSphere = generateMaterialSphere();
-scene.add(materialSphere);
+    addTorusesToScene(scene);
 
-const materialPlane = generateMaterialPlane();
-scene.add(materialPlane);
+    const container: HTMLElement | any = document.getElementById("three");
+    container.appendChild( renderer.domElement );
 
-const materialTorus = generateMaterialTorus();
-scene.add(materialTorus);
+    const materialSphere = generateMaterialSphere();
+    scene.add(materialSphere);
 
-const gradientSphere = generateGradientSphere();
-scene.add(gradientSphere);
+    const materialPlane = generateMaterialPlane();
+    scene.add(materialPlane);
 
-const cube = generateCube();
-scene.add(cube);
+    const materialTorus = generateMaterialTorus();
+    scene.add(materialTorus);
 
-const texturedCube = generateCubeWithTexture();
-scene.add(texturedCube);
+    const gradientSphere = generateGradientSphere();
+    scene.add(gradientSphere);
 
-const texturedIceCube = generateCubeWithIceTexture();
-scene.add(texturedIceCube);
+    const cube = generateCube();
+    scene.add(cube);
 
-const mesh = generateBufferGeometry();
-scene.add(mesh);
+    const texturedCube = generateCubeWithTexture();
+    scene.add(texturedCube);
 
-const plane = generatePlane();
-scene.add(plane);
+    const texturedIceCube = generateCubeWithIceTexture();
+    scene.add(texturedIceCube);
 
-const sphere = generateSphere();
-scene.add(sphere);
+    const mesh = generateBufferGeometry();
+    scene.add(mesh);
 
-const circle = generateCircle();
-scene.add(circle);
+    const plane = generatePlane();
+    scene.add(plane);
 
-const knot = generateTorusKnot();
-scene.add(knot);
+    const sphere = generateSphere();
+    scene.add(sphere);
 
-const ring = generateRing();
-scene.add(ring);
+    const circle = generateCircle();
+    scene.add(circle);
 
-const octahedron = generateOctahedron();
-scene.add(octahedron);
+    const knot = generateTorusKnot();
+    scene.add(knot);
 
-addText(scene, 'Hello three.js!', { x: -40, z: -60});
-addText(scene, 'Test', { x: -40, y: 30, z: -60});
+    const ring = generateRing();
+    scene.add(ring);
 
-const rocket = generateRocketGroup();
-scene.add(rocket);
+    const octahedron = generateOctahedron();
+    scene.add(octahedron);
 
-const ambientLight = new AmbientLight( 0x404040 ); // soft white light
-scene.add(ambientLight);
+    addText(scene, 'Hello three.js!', { x: -20, z: -60});
+    addText(scene, 'Test', { x: -20, y: 30, z: -60});
 
-const light = generatePointLight();
-scene.add(light);
+    const rocket = generateRocketGroup();
+    scene.add(rocket);
 
-// Tween camera and object
-gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
-//gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
+    const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+    scene.add(ambientLight);
 
-const clock = new Clock();
-const animate = function () {
-    requestAnimationFrame(animate);
+    const light = generatePointLight();
+    scene.add(light);
 
-    const delta = clock.getDelta();
+    // Tween camera and object
+    gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
+    //gsap.to(camera.position, { duration: 5, delay: 1, x: 20, y: 20, z: 30});
 
-    cube.rotation.x += delta;
-    cube.rotation.y += delta;
+    const animate = function () {
+        requestAnimationFrame(animate);
 
-    sphere.rotation.y += delta;
+        const delta = clock.getDelta();
 
-    materialSphere.rotation.x += 0.12 * delta;
-    materialSphere.rotation.y += 0.2 * delta;
+        cube.rotation.x += delta;
+        cube.rotation.y += delta;
 
-    materialTorus.rotation.x +=  0.12 * delta;
-    materialTorus.rotation.y +=  0.2 * delta;
+        sphere.rotation.y += delta;
 
-    materialPlane.rotation.x +=  0.12 * delta;
-    materialPlane.rotation.y +=  0.2 * delta;
+        materialSphere.rotation.x += 0.12 * delta;
+        materialSphere.rotation.y += 0.2 * delta;
 
-    // Alternative control schemes
-    // camera.position.x = cursor.x * 100;
-    // camera.position.y = cursor.y * 100;
-    
-    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
-    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-    // camera.position.y = cursor.y * 5;
-    // camera.lookAt(axesHelper.position);
+        materialTorus.rotation.x +=  0.12 * delta;
+        materialTorus.rotation.y +=  0.2 * delta;
 
-    moveRing(ring);
+        materialPlane.rotation.x +=  0.12 * delta;
+        materialPlane.rotation.y +=  0.2 * delta;
 
-    controls.update();
-    renderer.render(scene, camera);
-};
+        // Alternative control schemes
+        // camera.position.x = cursor.x * 100;
+        // camera.position.y = cursor.y * 100;
+        
+        // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+        // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+        // camera.position.y = cursor.y * 5;
+        // camera.lookAt(axesHelper.position);
 
-function moveRing(ring: Mesh): void {
-    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
-}
+        moveRing(ring);
 
-configurDebugGui();
+        controls.update();
+        renderer.render(scene, camera);
+    };
 
-function generateDebugGui(): dat.GUI {
-    const debugGui = new dat.GUI({ 
-        closed: true, 
-        width: 350,
-    });
-    debugGui.hide();
-    return debugGui;
-}
-
-function configurDebugGui(): void {
     configureMeshDebug(cube, 'cube');
     configureMeshDebug(texturedCube, 'textured cube');
     configureMeshDebug(mesh, 'buffer mesh');
@@ -204,6 +197,21 @@ function configurDebugGui(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
+
+    animate();
+}
+
+function moveRing(ring: Mesh): void {
+    ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
+
+function generateDebugGui(): dat.GUI {
+    const debugGui = new dat.GUI({ 
+        closed: true, 
+        width: 350,
+    });
+    debugGui.hide();
+    return debugGui;
 }
 
 function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
@@ -353,6 +361,26 @@ function generateEnvironmentMaterial(): Material {
     material.roughness = 0.05;
     material.envMap = environmentMapTexture;
     return material;
+}
+
+function addTorusesToScene(scene: Scene): void {
+    const torusGeometry = new TorusBufferGeometry(0.4, 0.3, 20, 45);
+
+    for(let i = 0; i < 100; i++) {
+        const torus = new Mesh(torusGeometry, matcapMaterial);
+
+        torus.position.x = (Math.random() - 0.5) * 20;
+        torus.position.y = (Math.random() - 0.5) * 20;
+        torus.position.z = (Math.random() - 2) * 20;
+
+        torus.rotation.x = Math.random() * Math.PI;
+        torus.rotation.y = Math.random() * Math.PI;
+
+        const scale = Math.random();
+        torus.scale.set(scale, scale, scale);
+
+        scene.add(torus);
+    }
 }
 
 function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
@@ -507,17 +535,24 @@ function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function addText(scene: Scene, text: string, position: Point): void {
-    const loader = new FontLoader();
-    loader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
-        const geometry = new TextGeometry( text, {
-            font: font,
-            size: 10,
-            height: 5,
-            bevelEnabled: false
-        });
+    fontLoader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
+        const geometry = new TextGeometry( 
+            text, 
+            {
+                font,
+                size: 10,
+                height: 5,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 5
+            }
+        );
 
-        const material = new MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff } );
-        const mesh = new Mesh( geometry, material );
+        geometry.center();
+
+        const mesh = new Mesh( geometry, matcapMaterial );
         mesh.position.z = position.z ? position.z : 0;
         mesh.position.y = position.y ? position.y : 0;
         mesh.position.x = position.x ? position.x : 0;
@@ -610,4 +645,4 @@ window.addEventListener('dblclick', () => {
     }
 });
 
-animate();
+startup();
