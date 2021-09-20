@@ -11,6 +11,7 @@ import {
   CubeTextureLoader,
   CylinderGeometry,
   DoubleSide,
+  Font,
   FontLoader,
   Group,
   LoadingManager,
@@ -46,6 +47,8 @@ import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
 import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
+import * as droid from './fonts/droid_sans_bold.typeface.json';
+import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
 
 const debugGui = generateDebugGui();
 
@@ -535,29 +538,28 @@ function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
 }
 
 function addText(scene: Scene, text: string, position: Point): void {
-    fontLoader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
-        const geometry = new TextGeometry( 
-            text, 
-            {
-                font,
-                size: 10,
-                height: 5,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelOffset: 0,
-                bevelSegments: 5
-            }
-        );
+    const font = new Font(helvetiker);
+    const geometry = new TextGeometry( 
+        text, 
+        {
+            font,
+            size: 10,
+            height: 5,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelOffset: 0,
+            bevelSegments: 5
+        }
+    );
 
-        geometry.center();
+    geometry.center();
 
-        const mesh = new Mesh( geometry, matcapMaterial );
-        mesh.position.z = position.z ? position.z : 0;
-        mesh.position.y = position.y ? position.y : 0;
-        mesh.position.x = position.x ? position.x : 0;
-        scene.add(mesh);
-    });
+    const mesh = new Mesh( geometry, matcapMaterial );
+    mesh.position.z = position.z ? position.z : 0;
+    mesh.position.y = position.y ? position.y : 0;
+    mesh.position.x = position.x ? position.x : 0;
+    scene.add(mesh);
 }
 
 function generateRocketGroup(): Group {
