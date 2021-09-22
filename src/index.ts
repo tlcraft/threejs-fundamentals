@@ -138,8 +138,11 @@ function startup(): void {
     const octahedron = generateOctahedron();
     scene.add(octahedron);
 
-    addText(scene, 'Hello three.js!', { x: -20, z: -60});
-    addText(scene, 'Test', { x: -20, y: 30, z: -60});
+    const helloText = addText('Hello three.js!', { x: -20, z: -60}, droid);
+    scene.add(helloText);
+
+    const testText = addText('Test', { x: -20, y: 30, z: -60}, helvetiker);
+    scene.add(testText);
 
     const rocket = generateRocketGroup();
     scene.add(rocket);
@@ -537,8 +540,8 @@ function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return octahedron;
 }
 
-function addText(scene: Scene, text: string, position: Point): void {
-    const font = new Font(helvetiker);
+function addText(text: string, position: Point, fontJson: any): Mesh {
+    const font = new Font(fontJson);
     const geometry = new TextGeometry( 
         text, 
         {
@@ -559,7 +562,7 @@ function addText(scene: Scene, text: string, position: Point): void {
     mesh.position.z = position.z ? position.z : 0;
     mesh.position.y = position.y ? position.y : 0;
     mesh.position.x = position.x ? position.x : 0;
-    scene.add(mesh);
+    return mesh;
 }
 
 function generateRocketGroup(): Group {
