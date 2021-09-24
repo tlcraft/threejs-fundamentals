@@ -48,6 +48,7 @@ import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
 import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
+import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
 
 const debugGui = generateDebugGui();
@@ -143,6 +144,9 @@ function startup(): void {
 
     const testText = generateTextMesh('Test', { x: -20, y: 30, z: -60}, helvetiker);
     scene.add(testText);
+
+    const droidSerifText = generateTextMesh('Droid Serif', { x: -20, y: 60, z: -60}, droidSerif);
+    scene.add(droidSerifText);
 
     const rocket = generateRocketGroup();
     scene.add(rocket);
