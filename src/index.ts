@@ -12,7 +12,6 @@ import {
   CylinderGeometry,
   DoubleSide,
   Font,
-  FontLoader,
   Group,
   LoadingManager,
   Material,
@@ -62,7 +61,6 @@ const renderer = generateRenderer();
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader();
-const fontLoader = new FontLoader();
 
 const doorColorTexture = textureLoader.load(door);
 const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
