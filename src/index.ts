@@ -149,7 +149,7 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
-    const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+    const ambientLight = new AmbientLight( 0x404040 );
     scene.add(ambientLight);
 
     const light = generatePointLight();
