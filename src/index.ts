@@ -108,7 +108,10 @@ function startup(): void {
     scene.add(gradientSphere);
 
     const toonMesh = generateToonMesh();
-    scene.add(toonMesh)
+    scene.add(toonMesh);
+
+    const matcapMesh = generateMatcapMesh();
+    scene.add(matcapMesh);
 
     const cube = generateCube();
     scene.add(cube);
@@ -334,6 +337,14 @@ function generateNormalMaterial(): Material {
     material.normalMap = doorNormalTexture;
     material.flatShading = true;
     return material;
+}
+
+function generateMatcapMesh(): Mesh {
+    const geometry = new SphereGeometry(2, 64, 64);
+    const material = generateMatcapMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(10, 0, 5);
+    return sphere;
 }
 
 function generateMatcapMaterial(): Material {
