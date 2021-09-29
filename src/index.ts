@@ -110,6 +110,9 @@ function startup(): void {
     const toonMesh = generateToonMesh();
     scene.add(toonMesh);
 
+    const basicMesh = generateBasicMesh();
+    scene.add(basicMesh);
+
     const matcapMesh = generateMatcapMesh();
     scene.add(matcapMesh);
 
@@ -322,6 +325,14 @@ function generateControls(): OrbitControls {
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableDamping = true;
     return controls;
+}
+
+function generateBasicMesh(): Mesh {
+    const geometry = new PlaneGeometry( 5, 5 );
+    const material = generateBasicMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 0, 5);
+    return sphere;
 }
 
 function generateBasicMaterial(): Material {
