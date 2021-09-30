@@ -113,6 +113,9 @@ function startup(): void {
     const basicMesh = generateBasicMesh();
     scene.add(basicMesh);
 
+    const normalMesh = generateNormalMesh();
+    scene.add(normalMesh);
+
     const matcapMesh = generateMatcapMesh();
     scene.add(matcapMesh);
 
@@ -341,6 +344,14 @@ function generateBasicMaterial(): Material {
     material.alphaMap = doorOpacityTexture;
     material.transparent = true;
     return material;
+}
+
+function generateNormalMesh(): Mesh {
+    const geometry = new PlaneGeometry( 3, 3 );
+    const material = generateNormalMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 5, 5);
+    return sphere;
 }
 
 function generateNormalMaterial(): Material {
