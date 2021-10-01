@@ -119,6 +119,9 @@ function startup(): void {
     const matcapMesh = generateMatcapMesh();
     scene.add(matcapMesh);
 
+    const standardMesh = generateStandardMesh();
+    scene.add(standardMesh);
+
     const cube = generateCube();
     scene.add(cube);
 
@@ -387,6 +390,14 @@ function generateToonMaterial(): Material {
     const material = new MeshToonMaterial({ side: DoubleSide });
     material.gradientMap = fiveToneTexture;
     return material;
+}
+
+function generateStandardMesh(): Mesh {
+    const geometry = new PlaneGeometry( 3, 3 );
+    const material = generateStandardMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 10, 5);
+    return sphere;
 }
 
 function generateStandardMaterial(): Material {
