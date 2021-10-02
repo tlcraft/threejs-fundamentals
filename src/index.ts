@@ -11,7 +11,7 @@ import {
   CubeTextureLoader,
   CylinderGeometry,
   DoubleSide,
-  FontLoader,
+  Font,
   Group,
   LoadingManager,
   Material,
@@ -46,6 +46,9 @@ import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
 import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
+import * as droid from './fonts/droid_sans_bold.typeface.json';
+import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
+import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
 
 const debugGui = generateDebugGui();
 
@@ -58,7 +61,6 @@ const renderer = generateRenderer();
 const loadingManager = configureLoadingManager();
 const textureLoader = new TextureLoader(loadingManager);
 const cubeTextureLoader = new CubeTextureLoader();
-const fontLoader = new FontLoader();
 
 const doorColorTexture = textureLoader.load(door);
 const doorAmbientOcclusionTexture = textureLoader.load(doorAmbientOcclusion);
@@ -105,6 +107,21 @@ function startup(): void {
     const gradientSphere = generateGradientSphere();
     scene.add(gradientSphere);
 
+    const toonMesh = generateToonMesh();
+    scene.add(toonMesh);
+
+    const basicMesh = generateBasicMesh();
+    scene.add(basicMesh);
+
+    const normalMesh = generateNormalMesh();
+    scene.add(normalMesh);
+
+    const matcapMesh = generateMatcapMesh();
+    scene.add(matcapMesh);
+
+    const standardMesh = generateStandardMesh();
+    scene.add(standardMesh);
+
     const cube = generateCube();
     scene.add(cube);
 
@@ -135,13 +152,19 @@ function startup(): void {
     const octahedron = generateOctahedron();
     scene.add(octahedron);
 
-    addText(scene, 'Hello three.js!', { x: -20, z: -60});
-    addText(scene, 'Test', { x: -20, y: 30, z: -60});
+    const helloText = generateTextMesh('Hello three.js!', { x: -20, z: -60}, droid);
+    scene.add(helloText);
+
+    const testText = generateTextMesh('Test', { x: -20, y: 30, z: -60}, helvetiker);
+    scene.add(testText);
+
+    const droidSerifText = generateTextMesh('Droid Serif', { x: -20, y: 60, z: -60}, droidSerif);
+    scene.add(droidSerifText);
 
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
-    const ambientLight = new AmbientLight( 0x404040 ); // soft white light
+    const ambientLight = new AmbientLight( 0x404040 );
     scene.add(ambientLight);
 
     const light = generatePointLight();
@@ -310,12 +333,28 @@ function generateControls(): OrbitControls {
     return controls;
 }
 
+function generateBasicMesh(): Mesh {
+    const geometry = new PlaneGeometry( 5, 5 );
+    const material = generateBasicMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 0, 5);
+    return sphere;
+}
+
 function generateBasicMaterial(): Material {
     const material = new MeshBasicMaterial({ side: DoubleSide });
     material.map = doorColorTexture;
     material.alphaMap = doorOpacityTexture;
     material.transparent = true;
     return material;
+}
+
+function generateNormalMesh(): Mesh {
+    const geometry = new PlaneGeometry( 3, 3 );
+    const material = generateNormalMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 5, 5);
+    return sphere;
 }
 
 function generateNormalMaterial(): Material {
@@ -325,16 +364,40 @@ function generateNormalMaterial(): Material {
     return material;
 }
 
+function generateMatcapMesh(): Mesh {
+    const geometry = new SphereGeometry(2, 64, 64);
+    const material = generateMatcapMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(10, 0, 5);
+    return sphere;
+}
+
 function generateMatcapMaterial(): Material {
     const material = new MeshMatcapMaterial({ side: DoubleSide });
     material.matcap = matcapTexture;
     return material;
 }
 
+function generateToonMesh(): Mesh {
+    const geometry = new SphereGeometry(2, 64, 64);
+    const material = generateToonMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(0, 0, 5);
+    return sphere;
+}
+
 function generateToonMaterial(): Material {
     const material = new MeshToonMaterial({ side: DoubleSide });
     material.gradientMap = fiveToneTexture;
     return material;
+}
+
+function generateStandardMesh(): Mesh {
+    const geometry = new PlaneGeometry( 3, 3 );
+    const material = generateStandardMaterial();
+    const sphere = new Mesh(geometry, material);
+    sphere.position.set(20, 10, 5);
+    return sphere;
 }
 
 function generateStandardMaterial(): Material {
@@ -534,30 +597,29 @@ function generateOctahedron(): Mesh<BufferGeometry, MeshLambertMaterial> {
     return octahedron;
 }
 
-function addText(scene: Scene, text: string, position: Point): void {
-    fontLoader.load( 'https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', function ( font ) {
-        const geometry = new TextGeometry( 
-            text, 
-            {
-                font,
-                size: 10,
-                height: 5,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelOffset: 0,
-                bevelSegments: 5
-            }
-        );
+function generateTextMesh(text: string, position: Point, fontJson: any): Mesh {
+    const font = new Font(fontJson);
+    const geometry = new TextGeometry( 
+        text, 
+        {
+            font,
+            size: 10,
+            height: 5,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelOffset: 0,
+            bevelSegments: 5
+        }
+    );
 
-        geometry.center();
+    geometry.center();
 
-        const mesh = new Mesh( geometry, matcapMaterial );
-        mesh.position.z = position.z ? position.z : 0;
-        mesh.position.y = position.y ? position.y : 0;
-        mesh.position.x = position.x ? position.x : 0;
-        scene.add(mesh);
-    });
+    const mesh = new Mesh( geometry, matcapMaterial );
+    mesh.position.z = position.z ? position.z : 0;
+    mesh.position.y = position.y ? position.y : 0;
+    mesh.position.x = position.x ? position.x : 0;
+    return mesh;
 }
 
 function generateRocketGroup(): Group {
