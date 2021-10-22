@@ -164,11 +164,11 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
-    const ambientLight = new AmbientLight( 0x404040 );
+    const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
 
-    const light = generatePointLight();
-    scene.add(light);
+    // const light = generatePointLight();
+    // scene.add(light);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
