@@ -220,6 +220,7 @@ function startup(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
+    debugGui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 
     animate();
 }
