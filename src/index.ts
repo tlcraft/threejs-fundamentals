@@ -10,6 +10,7 @@ import {
   ConeGeometry,
   CubeTextureLoader,
   CylinderGeometry,
+  DirectionalLight,
   DoubleSide,
   Font,
   Group,
@@ -166,6 +167,9 @@ function startup(): void {
 
     const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
+
+    const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
+    scene.add(directionalLight)
 
     // const light = generatePointLight();
     // scene.add(light);
