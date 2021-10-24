@@ -169,6 +169,7 @@ function startup(): void {
     scene.add(ambientLight);
 
     const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
+    directionalLight.position.set(2, 1, 0); // Light goes toward center of scene
     scene.add(directionalLight)
 
     // const light = generatePointLight();
