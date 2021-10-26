@@ -176,8 +176,8 @@ function startup(): void {
     const hemisphereLight = new HemisphereLight(0x00ff00, 0x0000ff, 0.1);
     scene.add(hemisphereLight)
 
-    // const light = generatePointLight();
-    // scene.add(light);
+    const light = generatePointLight();
+    scene.add(light);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
@@ -656,8 +656,8 @@ function generateRocketGroup(): Group {
 }
 
 function generatePointLight(): PointLight {
-    const light = new PointLight( 0xffffff, 3, 100 );
-    light.position.set( 15, 20, 5 );
+    const light = new PointLight(0xffffff, 3, 100, 2);
+    light.position.set(15, 20, 5);
     return light;
 }
 
