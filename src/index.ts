@@ -31,6 +31,7 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
+  RectAreaLight,
   RingGeometry,
   Scene,
   SphereGeometry,
@@ -178,6 +179,9 @@ function startup(): void {
 
     const light = generatePointLight();
     scene.add(light);
+
+    const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
+    scene.add(rectAreaLight);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
