@@ -23,6 +23,7 @@ import {
   MeshMatcapMaterial,
   MeshNormalMaterial,
   MeshPhongMaterial,
+  MeshPhysicalMaterial,
   MeshStandardMaterial,
   MeshToonMaterial,
   NearestFilter,
@@ -124,6 +125,9 @@ function startup(): void {
 
     const standardMesh = generateStandardMesh();
     scene.add(standardMesh);
+
+    const physicalCube = generateCubePhysicalMaterial()
+    scene.add(physicalCube);
 
     const cube = generateCube();
     scene.add(cube);
@@ -489,6 +493,14 @@ function generateCubeWithIceTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     const cube = new Mesh( geometry, material );
     cube.position.x = 10;
     cube.position.z = -5;
+    return cube;
+}
+
+function generateCubePhysicalMaterial(): Mesh<BufferGeometry, MeshPhysicalMaterial> {
+    const geometry = new BoxGeometry();
+    const material = new MeshPhysicalMaterial( { color: 0xeeff00 } );
+    const cube = new Mesh( geometry, material );
+    cube.position.set(3, -5, -2);
     return cube;
 }
 
