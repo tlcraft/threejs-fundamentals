@@ -36,6 +36,7 @@ import {
   RingGeometry,
   Scene,
   SphereGeometry,
+  SpotLight,
   TextGeometry,
   Texture,
   TextureLoader,
@@ -186,6 +187,11 @@ function startup(): void {
 
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
     scene.add(rectAreaLight);
+
+    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
+    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
+    spotLight.position.set(-25, 2, 10);
+    scene.add(spotLight);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
