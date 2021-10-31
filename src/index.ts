@@ -11,6 +11,7 @@ import {
   CubeTextureLoader,
   CylinderGeometry,
   DirectionalLight,
+  DirectionalLightHelper,
   DoubleSide,
   Font,
   Group,
@@ -179,6 +180,9 @@ function startup(): void {
     const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
     directionalLight.position.set(2, 1, 0); // Light goes toward center of scene
     scene.add(directionalLight);
+
+    const directionalLightHelper = new DirectionalLightHelper(directionalLight, 0.2);
+    scene.add(directionalLightHelper);
 
     const hemisphereLight = new HemisphereLight(0x00ff00, 0x0000ff, 0.1);
     scene.add(hemisphereLight);
