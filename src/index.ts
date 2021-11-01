@@ -34,6 +34,7 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
+  PointLightHelper,
   RectAreaLight,
   RingGeometry,
   Scene,
@@ -192,6 +193,9 @@ function startup(): void {
 
     const light = generatePointLight();
     scene.add(light);
+
+    const pointLightHelper = new PointLightHelper(light, 0.3);
+    scene.add(pointLightHelper);
 
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
     scene.add(rectAreaLight);
