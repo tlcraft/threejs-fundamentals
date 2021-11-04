@@ -10,9 +10,13 @@ import {
   ConeGeometry,
   CubeTextureLoader,
   CylinderGeometry,
+  DirectionalLight,
+  DirectionalLightHelper,
   DoubleSide,
   Font,
   Group,
+  HemisphereLight,
+  HemisphereLightHelper,
   LoadingManager,
   Material,
   Mesh,
@@ -21,6 +25,7 @@ import {
   MeshMatcapMaterial,
   MeshNormalMaterial,
   MeshPhongMaterial,
+  MeshPhysicalMaterial,
   MeshStandardMaterial,
   MeshToonMaterial,
   NearestFilter,
@@ -29,9 +34,13 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
+  PointLightHelper,
+  RectAreaLight,
   RingGeometry,
   Scene,
   SphereGeometry,
+  SpotLight,
+  SpotLightHelper,
   TextGeometry,
   Texture,
   TextureLoader,
@@ -41,6 +50,7 @@ import {
   WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
@@ -122,6 +132,9 @@ function startup(): void {
     const standardMesh = generateStandardMesh();
     scene.add(standardMesh);
 
+    const physicalCube = generateCubePhysicalMaterial()
+    scene.add(physicalCube);
+
     const cube = generateCube();
     scene.add(cube);
 
@@ -164,11 +177,41 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
-    const ambientLight = new AmbientLight( 0x404040 );
+    const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
+
+    const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
+    directionalLight.position.set(2, 1, 0); // Light goes toward center of scene
+    scene.add(directionalLight);
+
+    const directionalLightHelper = new DirectionalLightHelper(directionalLight, 0.2);
+    scene.add(directionalLightHelper);
+
+    const hemisphereLight = new HemisphereLight(0x00ff00, 0x0000ff, 0.1);
+    scene.add(hemisphereLight);
+
+    const hemisphereLightHelper = new HemisphereLightHelper(hemisphereLight, 0.3);
+    scene.add(hemisphereLightHelper);
 
     const light = generatePointLight();
     scene.add(light);
+
+    const pointLightHelper = new PointLightHelper(light, 0.3);
+    scene.add(pointLightHelper);
+
+    const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
+    scene.add(rectAreaLight);
+
+    const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
+    scene.add(rectAreaLightHelper);
+
+    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
+    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
+    spotLight.position.set(-25, 2, 10);
+    scene.add(spotLight);
+
+    const spotLightHelper = new SpotLightHelper(spotLight);
+    scene.add(spotLightHelper);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
@@ -220,6 +263,7 @@ function startup(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
+    debugGui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 
     animate();
 }
@@ -478,6 +522,14 @@ function generateCubeWithIceTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     return cube;
 }
 
+function generateCubePhysicalMaterial(): Mesh<BufferGeometry, MeshPhysicalMaterial> {
+    const geometry = new BoxGeometry();
+    const material = new MeshPhysicalMaterial( { color: 0xeeff00 } );
+    const cube = new Mesh( geometry, material );
+    cube.position.set(3, -5, -2);
+    return cube;
+}
+
 function generateBufferGeometry(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const numberOfTriangles = 2;
     const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
@@ -646,8 +698,8 @@ function generateRocketGroup(): Group {
 }
 
 function generatePointLight(): PointLight {
-    const light = new PointLight( 0xffffff, 3, 100 );
-    light.position.set( 15, 20, 5 );
+    const light = new PointLight(0xffffff, 3, 100, 2);
+    light.position.set(15, 20, 5);
     return light;
 }
 
