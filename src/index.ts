@@ -50,6 +50,7 @@ import {
   WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
@@ -200,6 +201,9 @@ function startup(): void {
 
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
     scene.add(rectAreaLight);
+
+    const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
+    scene.add(rectAreaLightHelper);
 
     // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
     const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
