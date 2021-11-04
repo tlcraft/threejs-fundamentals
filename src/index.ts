@@ -368,6 +368,7 @@ function generateRenderer(): WebGLRenderer {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
     return renderer;
 }
 
