@@ -428,6 +428,7 @@ function generateToonMesh(): Mesh {
     const material = generateToonMaterial();
     const sphere = new Mesh(geometry, material);
     sphere.position.set(0, 0, 5);
+    sphere.castShadow = true;
     return sphere;
 }
 
@@ -496,6 +497,7 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 10;
+    cube.castShadow = true;
     return cube;
 }
 
@@ -505,6 +507,7 @@ function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
+    cube.castShadow = true;
     return cube;
 }
 
@@ -555,6 +558,7 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const plane = new Mesh( planeGeometry, planeMaterial );
     plane.position.set(0, -10, 0);
     plane.rotateX( - Math.PI / 2);
+    plane.receiveShadow = true;
     return plane;
 }
 
@@ -701,6 +705,7 @@ function generateRocketGroup(): Group {
 function generatePointLight(): PointLight {
     const light = new PointLight(0xffffff, 3, 100, 2);
     light.position.set(15, 20, 5);
+    light.castShadow = true;
     return light;
 }
 
