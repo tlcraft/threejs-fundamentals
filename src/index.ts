@@ -706,6 +706,8 @@ function generatePointLight(): PointLight {
     const light = new PointLight(0xffffff, 3, 100, 2);
     light.position.set(15, 20, 5);
     light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
     return light;
 }
 
