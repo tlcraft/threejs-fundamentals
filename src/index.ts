@@ -4,6 +4,7 @@ import {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  CameraHelper,
   CircleGeometry,
   Clock,
   Color,
@@ -181,11 +182,17 @@ function startup(): void {
     scene.add(ambientLight);
 
     const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
-    directionalLight.position.set(2, 1, 0); // Light goes toward center of scene
+    directionalLight.position.set(2, 1, 3); // Light goes toward center of scene
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
     scene.add(directionalLight);
 
     const directionalLightHelper = new DirectionalLightHelper(directionalLight, 0.2);
     scene.add(directionalLightHelper);
+
+    const directionalLightCameraHelper = new CameraHelper(directionalLight.shadow.camera);
+    scene.add(directionalLightCameraHelper);
 
     const hemisphereLight = new HemisphereLight(0x00ff00, 0x0000ff, 0.1);
     scene.add(hemisphereLight);
