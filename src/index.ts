@@ -182,10 +182,12 @@ function startup(): void {
     scene.add(ambientLight);
 
     const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
-    directionalLight.position.set(2, 1, 3); // Light goes toward center of scene
+    directionalLight.position.set(15, 10, 15); // Light goes toward center of scene
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1024;
     directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 2;
     scene.add(directionalLight);
 
     const directionalLightHelper = new DirectionalLightHelper(directionalLight, 0.2);
