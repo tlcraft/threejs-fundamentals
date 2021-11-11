@@ -706,13 +706,17 @@ function generateRocketGroup(): Group {
 }
 
 function generateDirectionalLight(): DirectionalLight {
-    const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
+    const directionalLight = new DirectionalLight(0x00ffcc, 0.5);
     directionalLight.position.set(15, 10, 15); // Light goes toward center of scene
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1024;
     directionalLight.shadow.mapSize.height = 1024;
     directionalLight.shadow.camera.near = 1;
     directionalLight.shadow.camera.far = 2;
+    directionalLight.shadow.camera.top = 2;
+    directionalLight.shadow.camera.right = 2;
+    directionalLight.shadow.camera.bottom = -2;
+    directionalLight.shadow.camera.left = -2;
     return directionalLight;
 }
 
