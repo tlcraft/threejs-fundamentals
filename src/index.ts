@@ -689,12 +689,14 @@ function generateRocketGroup(): Group {
         new ConeGeometry(3, 10, 64),
         new MeshLambertMaterial({ color: 0x0f0f0f })
     );
+    cone.castShadow = true;
 
     const cylinder = new Mesh(
         new CylinderGeometry(3, 3, 10, 64),
         new MeshLambertMaterial({ color: 0x0f0f0f })
     );
     cylinder.position.y = -10;
+    cylinder.castShadow = true;
 
     group.add(cone);
     group.add(cylinder);
@@ -712,11 +714,11 @@ function generateDirectionalLight(): DirectionalLight {
     directionalLight.shadow.mapSize.width = 1024;
     directionalLight.shadow.mapSize.height = 1024;
     directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 2;
-    directionalLight.shadow.camera.top = 2;
-    directionalLight.shadow.camera.right = 2;
-    directionalLight.shadow.camera.bottom = -2;
-    directionalLight.shadow.camera.left = -2;
+    directionalLight.shadow.camera.far = 50;
+    directionalLight.shadow.camera.top = 10;
+    directionalLight.shadow.camera.right = 10;
+    directionalLight.shadow.camera.bottom = -10;
+    directionalLight.shadow.camera.left = -10;
     return directionalLight;
 }
 
