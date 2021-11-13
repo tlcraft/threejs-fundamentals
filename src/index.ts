@@ -719,6 +719,7 @@ function generateDirectionalLight(): DirectionalLight {
     directionalLight.shadow.camera.right = 10;
     directionalLight.shadow.camera.bottom = -10;
     directionalLight.shadow.camera.left = -10;
+    directionalLight.shadow.radius = 10;
     return directionalLight;
 }
 
