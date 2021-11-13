@@ -32,6 +32,7 @@ import {
   NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
+  PCFSoftShadowMap,
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
@@ -372,6 +373,7 @@ function generateRenderer(): WebGLRenderer {
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = PCFSoftShadowMap;
     return renderer;
 }
 
@@ -719,7 +721,6 @@ function generateDirectionalLight(): DirectionalLight {
     directionalLight.shadow.camera.right = 10;
     directionalLight.shadow.camera.bottom = -10;
     directionalLight.shadow.camera.left = -10;
-    directionalLight.shadow.radius = 10;
     return directionalLight;
 }
 
