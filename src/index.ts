@@ -211,11 +211,18 @@ function startup(): void {
 
     // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
     const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
-    spotLight.position.set(-25, 2, 10);
+    spotLight.position.set(-25, 10, 10);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
     scene.add(spotLight);
+    scene.add(spotLight.target);
 
     const spotLightHelper = new SpotLightHelper(spotLight);
     scene.add(spotLightHelper);
+
+    const spotLightCameraHelper = new CameraHelper(spotLight.shadow.camera);
+    scene.add(spotLightCameraHelper);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
