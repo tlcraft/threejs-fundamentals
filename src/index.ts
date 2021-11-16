@@ -209,12 +209,7 @@ function startup(): void {
     const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
     scene.add(rectAreaLightHelper);
 
-    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
-    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
-    spotLight.position.set(-25, 10, 10);
-    spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
+    const spotLight = generateSpotLight();
     scene.add(spotLight);
     scene.add(spotLight.target);
 
@@ -738,6 +733,16 @@ function generatePointLight(): PointLight {
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
     return light;
+}
+
+function generateSpotLight(): SpotLight {
+    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
+    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
+    spotLight.position.set(-25, 10, 10);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+    return spotLight;
 }
 
 function onKeyDown(event: any): void{
