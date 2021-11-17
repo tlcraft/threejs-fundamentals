@@ -203,6 +203,9 @@ function startup(): void {
     const pointLightHelper = new PointLightHelper(light, 0.3);
     scene.add(pointLightHelper);
 
+    const pointLightCameraHelper = new CameraHelper(light.shadow.camera);
+    scene.add(pointLightCameraHelper);
+
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
     scene.add(rectAreaLight);
 
