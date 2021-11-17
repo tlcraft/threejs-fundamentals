@@ -742,6 +742,9 @@ function generateSpotLight(): SpotLight {
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 1024;
     spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.camera.fov = 30;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 6;
     return spotLight;
 }
 
