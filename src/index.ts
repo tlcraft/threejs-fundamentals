@@ -735,6 +735,9 @@ function generatePointLight(): PointLight {
     light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
+    light.shadow.camera.fov = 30;
+    light.shadow.camera.near = 3;
+    light.shadow.camera.far = 30;
     return light;
 }
 
