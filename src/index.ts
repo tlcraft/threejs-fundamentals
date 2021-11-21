@@ -57,7 +57,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
 import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
@@ -93,6 +93,8 @@ const environmentMapTexture = cubeTextureLoader.load([
     clouds_north,   // positive z
     clouds_south    // negative z
 ]);
+
+const bakedShadow = textureLoader.load(shadow);
 
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
@@ -149,7 +151,7 @@ function startup(): void {
     const mesh = generateBufferGeometry();
     scene.add(mesh);
 
-    const plane = generatePlane();
+    const plane = generateShadowPlane();
     scene.add(plane);
 
     const sphere = generateSphere();
@@ -569,6 +571,14 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     plane.position.set(0, -10, 0);
     plane.rotateX( - Math.PI / 2);
     plane.receiveShadow = true;
+    return plane;
+}
+
+function generateShadowPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const planeGeometry = new PlaneGeometry( 60, 60 );
+    const plane = new Mesh( planeGeometry, new MeshBasicMaterial({map: bakedShadow}) );
+    plane.position.set(0, -10, 0);
+    plane.rotateX( - Math.PI / 2);
     return plane;
 }
 
