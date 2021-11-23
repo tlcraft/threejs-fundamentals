@@ -34,6 +34,7 @@ import {
   OrthographicCamera,
   PCFSoftShadowMap,
   PerspectiveCamera,
+  PlaneBufferGeometry,
   PlaneGeometry,
   PointLight,
   PointLightHelper,
@@ -57,7 +58,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
 import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
@@ -95,6 +96,7 @@ const environmentMapTexture = cubeTextureLoader.load([
 ]);
 
 const bakedShadow = textureLoader.load(shadow);
+const simpleShadowTexture = textureLoader.load(simpleShadow);
 
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
@@ -151,8 +153,11 @@ function startup(): void {
     const mesh = generateBufferGeometry();
     scene.add(mesh);
 
-    const plane = generateShadowPlane();
+    const plane = generatePlane();
     scene.add(plane);
+
+    const sphereShadow = generateShadow(plane);
+    scene.add(sphereShadow);
 
     const sphere = generateSphere();
     scene.add(sphere);
@@ -580,6 +585,19 @@ function generateShadowPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
     plane.position.set(0, -10, 0);
     plane.rotateX( - Math.PI / 2);
     return plane;
+}
+
+function generateShadow(plane: Mesh<BufferGeometry, MeshLambertMaterial>): Mesh<PlaneBufferGeometry, MeshBasicMaterial> {
+    const sphereShadow = new Mesh(
+        new PlaneBufferGeometry(1.5, 1.5),
+        new MeshBasicMaterial({ 
+            color: 0x000000, 
+            alphaMap: simpleShadowTexture, 
+            transparent: true}),
+    );
+    sphereShadow.rotation.x = -Math.PI * 0.5;
+    sphereShadow.position.y = plane.position.y + 0.5;
+    return sphereShadow;
 }
 
 function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
