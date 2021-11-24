@@ -156,6 +156,9 @@ function startup(): void {
     const plane = generatePlane();
     scene.add(plane);
 
+    const shadowSphere = generateShadowSphere();
+    scene.add(shadowSphere);
+
     const sphereShadow = generateShadow(plane);
     scene.add(sphereShadow);
 
@@ -596,7 +599,7 @@ function generateShadow(plane: Mesh<BufferGeometry, MeshLambertMaterial>): Mesh<
             transparent: true}),
     );
     sphereShadow.rotation.x = -Math.PI * 0.5;
-    sphereShadow.position.y = plane.position.y + 0.5;
+    sphereShadow.position.y = plane.position.y + 0.05;
     return sphereShadow;
 }
 
@@ -620,6 +623,14 @@ function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
     material.specular = new Color(0x0088ff);
     const sphere = new Mesh( geometry, material );
     sphere.position.set(-10, 0, 0);
+    return sphere;
+}
+
+function generateShadowSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
+    const geometry = new SphereGeometry( 1, 64, 64 );
+    const material = new MeshPhongMaterial( {color: 0x00ff00} );
+    const sphere = new Mesh( geometry, material );
+    sphere.position.y = -9;
     return sphere;
 }
 
