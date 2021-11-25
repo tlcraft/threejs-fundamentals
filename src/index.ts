@@ -264,6 +264,10 @@ function startup(): void {
         // camera.position.y = cursor.y * 5;
         // camera.lookAt(axesHelper.position);
 
+        shadowSphere.position.x = Math.cos(clock.elapsedTime);
+        shadowSphere.position.z = Math.sin(clock.elapsedTime);
+        shadowSphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
+
         moveRing(ring);
 
         controls.update();
