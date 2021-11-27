@@ -270,6 +270,7 @@ function startup(): void {
 
         sphereShadow.position.x = shadowSphere.position.x;
         sphereShadow.position.z = shadowSphere.position.z;
+        sphereShadow.material.opacity = (1 - shadowSphere.position.y) - 9;
 
         moveRing(ring);
 
