@@ -268,6 +268,9 @@ function startup(): void {
         shadowSphere.position.z = Math.sin(clock.elapsedTime);
         shadowSphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
 
+        sphereShadow.position.x = shadowSphere.position.x;
+        sphereShadow.position.z = shadowSphere.position.z;
+
         moveRing(ring);
 
         controls.update();
