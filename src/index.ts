@@ -156,10 +156,10 @@ function startup(): void {
     const plane = generatePlane();
     scene.add(plane);
 
-    const shadowSphere = generateShadowSphere();
-    scene.add(shadowSphere);
+    const greenSphere = generateGreenSphere();
+    scene.add(greenSphere);
 
-    const sphereShadow = generateShadow(plane);
+    const sphereShadow = generateShadowForSphere(plane);
     scene.add(sphereShadow);
 
     const sphere = generateSphere();
@@ -264,13 +264,13 @@ function startup(): void {
         // camera.position.y = cursor.y * 5;
         // camera.lookAt(axesHelper.position);
 
-        shadowSphere.position.x = Math.cos(clock.elapsedTime);
-        shadowSphere.position.z = Math.sin(clock.elapsedTime);
-        shadowSphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
+        greenSphere.position.x = Math.cos(clock.elapsedTime);
+        greenSphere.position.z = Math.sin(clock.elapsedTime);
+        greenSphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
 
-        sphereShadow.position.x = shadowSphere.position.x;
-        sphereShadow.position.z = shadowSphere.position.z;
-        sphereShadow.material.opacity = (1 - shadowSphere.position.y) - 9;
+        sphereShadow.position.x = greenSphere.position.x;
+        sphereShadow.position.z = greenSphere.position.z;
+        sphereShadow.material.opacity = (1 - greenSphere.position.y) - 9;
 
         moveRing(ring);
 
@@ -598,7 +598,7 @@ function generateShadowPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
     return plane;
 }
 
-function generateShadow(plane: Mesh<BufferGeometry, MeshLambertMaterial>): Mesh<PlaneBufferGeometry, MeshBasicMaterial> {
+function generateShadowForSphere(plane: Mesh<BufferGeometry, MeshLambertMaterial>): Mesh<PlaneBufferGeometry, MeshBasicMaterial> {
     const sphereShadow = new Mesh(
         new PlaneBufferGeometry(1.5, 1.5),
         new MeshBasicMaterial({ 
@@ -634,7 +634,7 @@ function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
     return sphere;
 }
 
-function generateShadowSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
+function generateGreenSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
     const geometry = new SphereGeometry( 1, 64, 64 );
     const material = new MeshPhongMaterial( {color: 0x00ff00} );
     const sphere = new Mesh( geometry, material );
