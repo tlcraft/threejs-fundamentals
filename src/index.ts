@@ -264,14 +264,7 @@ function startup(): void {
         // camera.position.y = cursor.y * 5;
         // camera.lookAt(axesHelper.position);
 
-        greenSphere.position.x = Math.cos(clock.elapsedTime);
-        greenSphere.position.z = Math.sin(clock.elapsedTime);
-        greenSphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
-
-        sphereShadow.position.x = greenSphere.position.x;
-        sphereShadow.position.z = greenSphere.position.z;
-        sphereShadow.material.opacity = (1 - greenSphere.position.y) - 9;
-
+        animateSphereAndShadow(greenSphere, sphereShadow);
         moveRing(ring);
 
         controls.update();
@@ -297,6 +290,16 @@ function startup(): void {
 
 function moveRing(ring: Mesh): void {
     ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
+
+function animateSphereAndShadow(sphere: Mesh<BufferGeometry, MeshPhongMaterial>, shadow: Mesh<PlaneBufferGeometry, MeshBasicMaterial>): void {
+    sphere.position.x = Math.cos(clock.elapsedTime);
+    sphere.position.z = Math.sin(clock.elapsedTime);
+    sphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
+
+    shadow.position.x = sphere.position.x;
+    shadow.position.z = sphere.position.z;
+    shadow.material.opacity = (1 - sphere.position.y) - 9;
 }
 
 function generateDebugGui(): dat.GUI {
