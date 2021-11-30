@@ -4,6 +4,7 @@ import {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  CameraHelper,
   CircleGeometry,
   Clock,
   Color,
@@ -31,7 +32,9 @@ import {
   NearestFilter,
   OctahedronGeometry,
   OrthographicCamera,
+  PCFSoftShadowMap,
   PerspectiveCamera,
+  PlaneBufferGeometry,
   PlaneGeometry,
   PointLight,
   PointLightHelper,
@@ -55,7 +58,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
 import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
@@ -91,6 +94,9 @@ const environmentMapTexture = cubeTextureLoader.load([
     clouds_north,   // positive z
     clouds_south    // negative z
 ]);
+
+const bakedShadow = textureLoader.load(shadow);
+const simpleShadowTexture = textureLoader.load(simpleShadow);
 
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
@@ -150,6 +156,12 @@ function startup(): void {
     const plane = generatePlane();
     scene.add(plane);
 
+    const greenSphere = generateGreenSphere();
+    scene.add(greenSphere);
+
+    const sphereShadow = generateShadowForSphere(plane);
+    scene.add(sphereShadow);
+
     const sphere = generateSphere();
     scene.add(sphere);
 
@@ -180,12 +192,14 @@ function startup(): void {
     const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
 
-    const directionalLight = new DirectionalLight(0x00ffcc, 0.3);
-    directionalLight.position.set(2, 1, 0); // Light goes toward center of scene
+    const directionalLight = generateDirectionalLight();
     scene.add(directionalLight);
 
     const directionalLightHelper = new DirectionalLightHelper(directionalLight, 0.2);
     scene.add(directionalLightHelper);
+
+    const directionalLightCameraHelper = new CameraHelper(directionalLight.shadow.camera);
+    scene.add(directionalLightCameraHelper);
 
     const hemisphereLight = new HemisphereLight(0x00ff00, 0x0000ff, 0.1);
     scene.add(hemisphereLight);
@@ -199,19 +213,24 @@ function startup(): void {
     const pointLightHelper = new PointLightHelper(light, 0.3);
     scene.add(pointLightHelper);
 
+    const pointLightCameraHelper = new CameraHelper(light.shadow.camera);
+    scene.add(pointLightCameraHelper);
+
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
     scene.add(rectAreaLight);
 
     const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
     scene.add(rectAreaLightHelper);
 
-    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
-    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
-    spotLight.position.set(-25, 2, 10);
+    const spotLight = generateSpotLight();
     scene.add(spotLight);
+    scene.add(spotLight.target);
 
     const spotLightHelper = new SpotLightHelper(spotLight);
     scene.add(spotLightHelper);
+
+    const spotLightCameraHelper = new CameraHelper(spotLight.shadow.camera);
+    scene.add(spotLightCameraHelper);
 
     // Tween camera and object
     gsap.to(knot.position, { duration: 3, delay: 1,  x: -60});
@@ -245,6 +264,7 @@ function startup(): void {
         // camera.position.y = cursor.y * 5;
         // camera.lookAt(axesHelper.position);
 
+        animateSphereAndShadow(greenSphere, sphereShadow);
         moveRing(ring);
 
         controls.update();
@@ -270,6 +290,16 @@ function startup(): void {
 
 function moveRing(ring: Mesh): void {
     ring.position.z = (Math.sin(clock.elapsedTime) * 2) + 15;
+}
+
+function animateSphereAndShadow(sphere: Mesh<BufferGeometry, MeshPhongMaterial>, shadow: Mesh<PlaneBufferGeometry, MeshBasicMaterial>): void {
+    sphere.position.x = Math.cos(clock.elapsedTime);
+    sphere.position.z = Math.sin(clock.elapsedTime);
+    sphere.position.y = Math.abs(Math.sin(clock.elapsedTime)) - 9;
+
+    shadow.position.x = sphere.position.x;
+    shadow.position.z = sphere.position.z;
+    shadow.material.opacity = (1 - sphere.position.y) - 9;
 }
 
 function generateDebugGui(): dat.GUI {
@@ -368,6 +398,8 @@ function generateRenderer(): WebGLRenderer {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = PCFSoftShadowMap;
     return renderer;
 }
 
@@ -427,6 +459,7 @@ function generateToonMesh(): Mesh {
     const material = generateToonMaterial();
     const sphere = new Mesh(geometry, material);
     sphere.position.set(0, 0, 5);
+    sphere.castShadow = true;
     return sphere;
 }
 
@@ -495,6 +528,7 @@ function generateCube(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const material = new MeshLambertMaterial( { color: 0x00ff00, wireframe: true } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 10;
+    cube.castShadow = true;
     return cube;
 }
 
@@ -504,6 +538,7 @@ function generateCubeWithTexture(): Mesh<BufferGeometry, MeshBasicMaterial> {
     const material = new MeshBasicMaterial( { map: texture } );
     const cube = new Mesh( geometry, material );
     cube.position.x = 15;
+    cube.castShadow = true;
     return cube;
 }
 
@@ -554,7 +589,29 @@ function generatePlane(): Mesh<BufferGeometry, MeshLambertMaterial> {
     const plane = new Mesh( planeGeometry, planeMaterial );
     plane.position.set(0, -10, 0);
     plane.rotateX( - Math.PI / 2);
+    plane.receiveShadow = true;
     return plane;
+}
+
+function generateShadowPlane(): Mesh<BufferGeometry, MeshBasicMaterial> {
+    const planeGeometry = new PlaneGeometry( 60, 60 );
+    const plane = new Mesh( planeGeometry, new MeshBasicMaterial({map: bakedShadow}) );
+    plane.position.set(0, -10, 0);
+    plane.rotateX( - Math.PI / 2);
+    return plane;
+}
+
+function generateShadowForSphere(plane: Mesh<BufferGeometry, MeshLambertMaterial>): Mesh<PlaneBufferGeometry, MeshBasicMaterial> {
+    const sphereShadow = new Mesh(
+        new PlaneBufferGeometry(1.5, 1.5),
+        new MeshBasicMaterial({ 
+            color: 0x000000, 
+            alphaMap: simpleShadowTexture, 
+            transparent: true}),
+    );
+    sphereShadow.rotation.x = -Math.PI * 0.5;
+    sphereShadow.position.y = plane.position.y + 0.05;
+    return sphereShadow;
 }
 
 function generateMaterialPlane(): Mesh<BufferGeometry, Material> {
@@ -577,6 +634,14 @@ function generateSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
     material.specular = new Color(0x0088ff);
     const sphere = new Mesh( geometry, material );
     sphere.position.set(-10, 0, 0);
+    return sphere;
+}
+
+function generateGreenSphere(): Mesh<BufferGeometry, MeshPhongMaterial> {
+    const geometry = new SphereGeometry( 1, 64, 64 );
+    const material = new MeshPhongMaterial( {color: 0x00ff00} );
+    const sphere = new Mesh( geometry, material );
+    sphere.position.y = -9;
     return sphere;
 }
 
@@ -681,12 +746,14 @@ function generateRocketGroup(): Group {
         new ConeGeometry(3, 10, 64),
         new MeshLambertMaterial({ color: 0x0f0f0f })
     );
+    cone.castShadow = true;
 
     const cylinder = new Mesh(
         new CylinderGeometry(3, 3, 10, 64),
         new MeshLambertMaterial({ color: 0x0f0f0f })
     );
     cylinder.position.y = -10;
+    cylinder.castShadow = true;
 
     group.add(cone);
     group.add(cylinder);
@@ -697,10 +764,44 @@ function generateRocketGroup(): Group {
     return group;
 }
 
+function generateDirectionalLight(): DirectionalLight {
+    const directionalLight = new DirectionalLight(0x00ffcc, 0.5);
+    directionalLight.position.set(15, 10, 15); // Light goes toward center of scene
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 50;
+    directionalLight.shadow.camera.top = 10;
+    directionalLight.shadow.camera.right = 10;
+    directionalLight.shadow.camera.bottom = -10;
+    directionalLight.shadow.camera.left = -10;
+    return directionalLight;
+}
+
 function generatePointLight(): PointLight {
     const light = new PointLight(0xffffff, 3, 100, 2);
     light.position.set(15, 20, 5);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    light.shadow.camera.fov = 30;
+    light.shadow.camera.near = 3;
+    light.shadow.camera.far = 30;
     return light;
+}
+
+function generateSpotLight(): SpotLight {
+    // Color, Intensity, Fade Distance, Angle of Light Ray, Edge Dimness, Decay
+    const spotLight = new SpotLight(0x78ff00, 0.75, 150, Math.PI * 0.25, 0.25, 1);
+    spotLight.position.set(-25, 10, 10);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.camera.fov = 30;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 6;
+    return spotLight;
 }
 
 function onKeyDown(event: any): void{

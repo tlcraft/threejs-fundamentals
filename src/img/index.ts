@@ -17,5 +17,7 @@ import ice from './ice.png';
 import matcap from './matcap/generator2.jpg';
 import matcapBlue from './matcap/matcap-example.png';
 import fiveTone from './tones/fiveTone.jpg';
+import shadow from './shadow.jpg';
+import simpleShadow from './simpleShadow.png';
 
-export { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone };
+export { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow };
