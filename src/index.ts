@@ -150,8 +150,8 @@ function startup(): void {
     const texturedIceCube = generateCubeWithIceTexture();
     scene.add(texturedIceCube);
 
-    const mesh = generateBufferGeometry();
-    scene.add(mesh);
+    const bufferGeometryMesh = generateBufferGeometry();
+    scene.add(bufferGeometryMesh);
 
     const plane = generatePlane();
     scene.add(plane);
@@ -273,7 +273,7 @@ function startup(): void {
 
     configureMeshDebug(cube, 'cube');
     configureMeshDebug(texturedCube, 'textured cube');
-    configureMeshDebug(mesh, 'buffer mesh');
+    configureMeshDebug(bufferGeometryMesh, 'buffer geometry mesh');
     configureMeshDebug(plane, 'plane');
     configureMeshDebug(sphere, 'sphere');
     configureMeshDebug(circle, 'circle');
