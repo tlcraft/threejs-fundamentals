@@ -207,13 +207,13 @@ function startup(): void {
     const hemisphereLightHelper = new HemisphereLightHelper(hemisphereLight, 0.3);
     scene.add(hemisphereLightHelper);
 
-    const light = generatePointLight();
-    scene.add(light);
+    const pointlight = generatePointLight();
+    scene.add(pointlight);
 
-    const pointLightHelper = new PointLightHelper(light, 0.3);
+    const pointLightHelper = new PointLightHelper(pointlight, 0.3);
     scene.add(pointLightHelper);
 
-    const pointLightCameraHelper = new CameraHelper(light.shadow.camera);
+    const pointLightCameraHelper = new CameraHelper(pointlight.shadow.camera);
     scene.add(pointLightCameraHelper);
 
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
