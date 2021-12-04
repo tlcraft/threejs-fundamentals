@@ -241,8 +241,7 @@ function startup(): void {
 
         const delta = clock.getDelta();
 
-        cube.rotation.x += delta;
-        cube.rotation.y += delta;
+        animateCube(cube, delta);
 
         sphere.rotation.y += delta;
 
@@ -286,6 +285,11 @@ function startup(): void {
     debugGui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 
     animate();
+}
+
+function animateCube(cube: Mesh<BufferGeometry, MeshLambertMaterial>, delta: number) {
+    cube.rotation.x += delta;
+    cube.rotation.y += delta;
 }
 
 function moveRing(ring: Mesh): void {
