@@ -245,14 +245,9 @@ function startup(): void {
 
         sphere.rotation.y += delta;
 
-        materialSphere.rotation.x += 0.12 * delta;
-        materialSphere.rotation.y += 0.2 * delta;
-
-        materialTorus.rotation.x +=  0.12 * delta;
-        materialTorus.rotation.y +=  0.2 * delta;
-
-        materialPlane.rotation.x +=  0.12 * delta;
-        materialPlane.rotation.y +=  0.2 * delta;
+        animateMesh(materialSphere, delta);
+        animateMesh(materialTorus, delta);
+        animateMesh(materialPlane, delta);
 
         // Alternative control schemes
         // camera.position.x = cursor.x * 100;
@@ -290,6 +285,11 @@ function startup(): void {
 function animateCube(cube: Mesh<BufferGeometry, MeshLambertMaterial>, delta: number) {
     cube.rotation.x += delta;
     cube.rotation.y += delta;
+}
+
+function animateMesh(mesh: Mesh<BufferGeometry, Material>, delta: number) {
+    mesh.rotation.x += 0.12 * delta;
+    mesh.rotation.y += 0.2 * delta;
 }
 
 function moveRing(ring: Mesh): void {
