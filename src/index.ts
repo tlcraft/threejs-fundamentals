@@ -18,6 +18,7 @@ import {
   Group,
   HemisphereLight,
   HemisphereLightHelper,
+  Light,
   LoadingManager,
   Material,
   Mesh,
@@ -277,7 +278,8 @@ function startup(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
-    debugGui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
+    configureLightDebug(ambientLight, 'ambient light');
+    configureLightDebug(pointlight, 'point light');
 
     animate();
 }
@@ -349,6 +351,11 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     if(mesh.material.hasOwnProperty('displacementScale')) {
         folder.add(mesh.material, 'displacementScale').min(0).max(1).step(0.001);
     }
+}
+
+function configureLightDebug(light: Light, name: string): void {
+    const folder = debugGui.addFolder(`${name} section`);
+    folder.add(light, 'intensity').min(0).max(1).step(0.01);
 }
 
 function configureLoadingManager(): LoadingManager {
