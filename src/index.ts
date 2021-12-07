@@ -278,9 +278,13 @@ function startup(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
+
     configureLightDebug(ambientLight, 'ambient light');
     configureLightDebug(pointlight, 'point light');
     configureLightDebug(spotLight, 'spot light');
+    configureLightDebug(rectAreaLight, 'rect area light');
+    configureLightDebug(hemisphereLight, 'hemisphere light');
+    configureLightDebug(directionalLight, 'directional light');
 
     animate();
 }
