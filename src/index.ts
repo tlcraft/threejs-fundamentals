@@ -280,6 +280,7 @@ function startup(): void {
     configureMeshDebug(materialPlane, 'material plane');
     configureLightDebug(ambientLight, 'ambient light');
     configureLightDebug(pointlight, 'point light');
+    configureLightDebug(spotLight, 'spot light');
 
     animate();
 }
