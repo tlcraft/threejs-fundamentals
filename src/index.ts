@@ -360,7 +360,7 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
 
 function configureLightDebug(light: Light, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
-    folder.add(light, 'intensity').min(0).max(1).step(0.01);
+    folder.add(light, 'intensity').min(0).max(10).step(0.05);
 }
 
 function configureLoadingManager(): LoadingManager {
