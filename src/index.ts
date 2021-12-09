@@ -361,6 +361,14 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
 function configureLightDebug(light: Light, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
     folder.add(light, 'intensity').min(0).max(10).step(0.05);
+    
+    const parameters = {
+        color: light.color.getHex()
+    };
+
+    folder.addColor(parameters, 'color').onChange(() => {
+        light.color.set(parameters.color);
+    });
 }
 
 function configureLoadingManager(): LoadingManager {
