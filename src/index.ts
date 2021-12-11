@@ -324,9 +324,9 @@ function generateDebugGui(): dat.GUI {
 
 function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
-    folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
-    folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
-    folder.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('z-axis');
+    folder.add(mesh.position, 'x').min(mesh.position.x-40).max(mesh.position.x+40).step(0.01).name('x-axis');
+    folder.add(mesh.position, 'y').min(mesh.position.y-40).max(mesh.position.y+40).step(0.01).name('y-axis');
+    folder.add(mesh.position, 'z').min(mesh.position.z-40).max(mesh.position.z+40).step(0.01).name('z-axis');
 
     folder.add(mesh, 'visible');
     folder.add(mesh.material, 'wireframe');
@@ -361,6 +361,10 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
 function configureLightDebug(light: Light, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
     folder.add(light, 'intensity').min(0).max(10).step(0.05);
+    
+    folder.add(light.position, 'x').min(light.position.x-40).max(light.position.x+40).step(0.01).name('x-axis');
+    folder.add(light.position, 'y').min(light.position.y-40).max(light.position.y+40).step(0.01).name('y-axis');
+    folder.add(light.position, 'z').min(light.position.z-40).max(light.position.z+40).step(0.01).name('z-axis');
 
     const parameters = {
         color: light.color.getHex()
