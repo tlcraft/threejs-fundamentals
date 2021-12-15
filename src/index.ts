@@ -31,6 +31,7 @@ import {
   MeshStandardMaterial,
   MeshToonMaterial,
   NearestFilter,
+  Object3D,
   OctahedronGeometry,
   OrthographicCamera,
   PCFSoftShadowMap,
@@ -281,10 +282,13 @@ function startup(): void {
 
     configureLightDebug(ambientLight, 'ambient light');
     configureLightDebug(pointlight, 'point light');
-    configureLightDebug(spotLight, 'spot light');
     configureLightDebug(rectAreaLight, 'rect area light');
     configureLightDebug(hemisphereLight, 'hemisphere light');
     configureLightDebug(directionalLight, 'directional light');
+
+    configureLightDebug(spotLight, 'spot light');
+    configureObject3dDebug(spotLightHelper, 'spot light helper');
+    configureObject3dDebug(spotLightCameraHelper, 'spot light camera helper');
 
     animate();
 }
@@ -387,6 +391,11 @@ function configureLightDebug(light: Light, name: string): void {
     if(light.hasOwnProperty('castShadow')) {
         folder.add(light, 'castShadow');
     }
+}
+
+function configureObject3dDebug(obj: Object3D, name: string): void {
+    const folder = debugGui.addFolder(`${name} section`);
+    folder.add(obj, 'visible');
 }
 
 function configureLoadingManager(): LoadingManager {
