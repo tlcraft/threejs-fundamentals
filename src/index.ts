@@ -281,7 +281,6 @@ function startup(): void {
     configureMeshDebug(materialPlane, 'material plane');
 
     configureLightDebug(ambientLight, 'ambient light');
-    configureLightDebug(hemisphereLight, 'hemisphere light');
     configureLightDebug(directionalLight, 'directional light');
 
     configureLightDebug(spotLight, 'spot light');
@@ -294,6 +293,9 @@ function startup(): void {
 
     configureLightDebug(rectAreaLight, 'rect area light');
     configureObject3dDebug(rectAreaLightHelper, 'rect area light helper');
+    
+    configureLightDebug(hemisphereLight, 'hemisphere light');
+    configureObject3dDebug(hemisphereLightHelper, 'hemisphere light helper');
     
     animate();
 }
