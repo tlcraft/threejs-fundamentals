@@ -18,6 +18,7 @@ import {
   Group,
   HemisphereLight,
   HemisphereLightHelper,
+  Light,
   LoadingManager,
   Material,
   Mesh,
@@ -30,6 +31,7 @@ import {
   MeshStandardMaterial,
   MeshToonMaterial,
   NearestFilter,
+  Object3D,
   OctahedronGeometry,
   OrthographicCamera,
   PCFSoftShadowMap,
@@ -150,8 +152,8 @@ function startup(): void {
     const texturedIceCube = generateCubeWithIceTexture();
     scene.add(texturedIceCube);
 
-    const mesh = generateBufferGeometry();
-    scene.add(mesh);
+    const bufferGeometryMesh = generateBufferGeometry();
+    scene.add(bufferGeometryMesh);
 
     const plane = generatePlane();
     scene.add(plane);
@@ -207,13 +209,13 @@ function startup(): void {
     const hemisphereLightHelper = new HemisphereLightHelper(hemisphereLight, 0.3);
     scene.add(hemisphereLightHelper);
 
-    const light = generatePointLight();
-    scene.add(light);
+    const pointlight = generatePointLight();
+    scene.add(pointlight);
 
-    const pointLightHelper = new PointLightHelper(light, 0.3);
+    const pointLightHelper = new PointLightHelper(pointlight, 0.3);
     scene.add(pointLightHelper);
 
-    const pointLightCameraHelper = new CameraHelper(light.shadow.camera);
+    const pointLightCameraHelper = new CameraHelper(pointlight.shadow.camera);
     scene.add(pointLightCameraHelper);
 
     const rectAreaLight = new RectAreaLight(0x4e00ff, 10, 10, 10);
@@ -241,19 +243,13 @@ function startup(): void {
 
         const delta = clock.getDelta();
 
-        cube.rotation.x += delta;
-        cube.rotation.y += delta;
+        animateCube(cube, delta);
 
         sphere.rotation.y += delta;
 
-        materialSphere.rotation.x += 0.12 * delta;
-        materialSphere.rotation.y += 0.2 * delta;
-
-        materialTorus.rotation.x +=  0.12 * delta;
-        materialTorus.rotation.y +=  0.2 * delta;
-
-        materialPlane.rotation.x +=  0.12 * delta;
-        materialPlane.rotation.y +=  0.2 * delta;
+        animateMesh(materialSphere, delta);
+        animateMesh(materialTorus, delta);
+        animateMesh(materialPlane, delta);
 
         // Alternative control schemes
         // camera.position.x = cursor.x * 100;
@@ -273,7 +269,7 @@ function startup(): void {
 
     configureMeshDebug(cube, 'cube');
     configureMeshDebug(texturedCube, 'textured cube');
-    configureMeshDebug(mesh, 'buffer mesh');
+    configureMeshDebug(bufferGeometryMesh, 'buffer geometry mesh');
     configureMeshDebug(plane, 'plane');
     configureMeshDebug(sphere, 'sphere');
     configureMeshDebug(circle, 'circle');
@@ -283,9 +279,38 @@ function startup(): void {
     configureMeshDebug(materialSphere, 'material sphere');
     configureMeshDebug(materialTorus, 'material torus');
     configureMeshDebug(materialPlane, 'material plane');
-    debugGui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
+
+    configureLightDebug(ambientLight, 'ambient light');
+
+    configureLightDebug(spotLight, 'spot light');
+    configureObject3dDebug(spotLightHelper, 'spot light helper');
+    configureObject3dDebug(spotLightCameraHelper, 'spot light camera helper');
+
+    configureLightDebug(pointlight, 'point light');
+    configureObject3dDebug(pointLightHelper, 'point light helper');
+    configureObject3dDebug(pointLightCameraHelper, 'point light camera helper');
+
+    configureLightDebug(rectAreaLight, 'rect area light');
+    configureObject3dDebug(rectAreaLightHelper, 'rect area light helper');
+    
+    configureLightDebug(hemisphereLight, 'hemisphere light');
+    configureObject3dDebug(hemisphereLightHelper, 'hemisphere light helper');
+    
+    configureLightDebug(directionalLight, 'directional light');
+    configureObject3dDebug(directionalLightHelper, 'directional light helper');
+    configureObject3dDebug(directionalLightCameraHelper, 'directional light camera helper');
 
     animate();
+}
+
+function animateCube(cube: Mesh<BufferGeometry, MeshLambertMaterial>, delta: number) {
+    cube.rotation.x += delta;
+    cube.rotation.y += delta;
+}
+
+function animateMesh(mesh: Mesh<BufferGeometry, Material>, delta: number) {
+    mesh.rotation.x += 0.12 * delta;
+    mesh.rotation.y += 0.2 * delta;
 }
 
 function moveRing(ring: Mesh): void {
@@ -313,9 +338,13 @@ function generateDebugGui(): dat.GUI {
 
 function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | MeshBasicMaterial | Material>, name: string): void {
     const folder = debugGui.addFolder(`${name} section`);
-    folder.add(mesh.position, 'x').min(mesh.position.x-10).max(mesh.position.x+10).step(0.01).name('x-axis');
-    folder.add(mesh.position, 'y').min(mesh.position.y-10).max(mesh.position.y+10).step(0.01).name('y-axis');
-    folder.add(mesh.position, 'z').min(mesh.position.z-10).max(mesh.position.z+10).step(0.01).name('z-axis');
+    folder.add(mesh.position, 'x').min(mesh.position.x-40).max(mesh.position.x+40).step(0.01).name('x-axis');
+    folder.add(mesh.position, 'y').min(mesh.position.y-40).max(mesh.position.y+40).step(0.01).name('y-axis');
+    folder.add(mesh.position, 'z').min(mesh.position.z-40).max(mesh.position.z+40).step(0.01).name('z-axis');
+
+    folder.add(mesh.rotation, 'x').min(0).max(Math.PI * 2).step(0.01).name('x-axis rotation');
+    folder.add(mesh.rotation, 'y').min(0).max(Math.PI * 2).step(0.01).name('y-axis rotation');
+    folder.add(mesh.rotation, 'z').min(0).max(Math.PI * 2).step(0.01).name('z-axis rotation');
 
     folder.add(mesh, 'visible');
     folder.add(mesh.material, 'wireframe');
@@ -345,6 +374,38 @@ function configureMeshDebug(mesh: Mesh<BufferGeometry, MeshLambertMaterial | Mes
     if(mesh.material.hasOwnProperty('displacementScale')) {
         folder.add(mesh.material, 'displacementScale').min(0).max(1).step(0.001);
     }
+}
+
+function configureLightDebug(light: Light, name: string): void {
+    const folder = debugGui.addFolder(`${name} section`);
+    folder.add(light, 'intensity').min(0).max(10).step(0.05);
+    
+    folder.add(light.position, 'x').min(light.position.x-40).max(light.position.x+40).step(0.01).name('x-axis');
+    folder.add(light.position, 'y').min(light.position.y-40).max(light.position.y+40).step(0.01).name('y-axis');
+    folder.add(light.position, 'z').min(light.position.z-40).max(light.position.z+40).step(0.01).name('z-axis');
+
+    folder.add(light.rotation, 'x').min(0).max(Math.PI * 2).step(0.01).name('x-axis rotation');
+    folder.add(light.rotation, 'y').min(0).max(Math.PI * 2).step(0.01).name('y-axis rotation');
+    folder.add(light.rotation, 'z').min(0).max(Math.PI * 2).step(0.01).name('z-axis rotation');
+    
+    folder.add(light, 'visible');
+
+    const parameters = {
+        color: light.color.getHex()
+    };
+
+    folder.addColor(parameters, 'color').onChange(() => {
+        light.color.set(parameters.color);
+    });
+
+    if(light.hasOwnProperty('castShadow')) {
+        folder.add(light, 'castShadow');
+    }
+}
+
+function configureObject3dDebug(obj: Object3D, name: string): void {
+    const folder = debugGui.addFolder(`${name} section`);
+    folder.add(obj, 'visible');
 }
 
 function configureLoadingManager(): LoadingManager {
