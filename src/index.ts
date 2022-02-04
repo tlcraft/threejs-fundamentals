@@ -40,9 +40,12 @@ import {
   PlaneGeometry,
   PointLight,
   PointLightHelper,
+  Points,
+  PointsMaterial,
   RectAreaLight,
   RingGeometry,
   Scene,
+  SphereBufferGeometry,
   SphereGeometry,
   SpotLight,
   SpotLightHelper,
@@ -191,6 +194,11 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
+    const particleGeometry = new SphereBufferGeometry(1, 32, 32);
+    const particleMaterial = new PointsMaterial({size: 0.02, sizeAttenuation: true});
+    const points = new Points(particleGeometry, particleMaterial);    
+    scene.add(points);
+    
     const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
 
