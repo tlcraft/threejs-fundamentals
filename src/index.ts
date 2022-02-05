@@ -194,9 +194,7 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
-    const particleGeometry = new SphereBufferGeometry(1, 32, 32);
-    const particleMaterial = new PointsMaterial({size: 0.02, sizeAttenuation: true});
-    const points = new Points(particleGeometry, particleMaterial);    
+    const points = generatePointParticles();    
     scene.add(points);
     
     const ambientLight = new AmbientLight( 0x404040, 0.5 );
@@ -831,6 +829,13 @@ function generateRocketGroup(): Group {
     group.position.y = 15;
 
     return group;
+}
+
+function generatePointParticles(): Points {
+    const particleGeometry = new SphereBufferGeometry(1, 32, 32);
+    const particleMaterial = new PointsMaterial({size: 0.02, sizeAttenuation: true});
+    const points = new Points(particleGeometry, particleMaterial);    
+    return points;
 }
 
 function generateDirectionalLight(): DirectionalLight {
