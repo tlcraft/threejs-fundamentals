@@ -853,7 +853,7 @@ function generateRandomParticles(): Points {
 
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', positionsAttribute);
-    const material = new PointsMaterial( {size: 0.02, sizeAttenuation: true} );
+    const material = new PointsMaterial( {size: 0.1, sizeAttenuation: true} );
     const mesh = new Points( geometry, material );
     mesh.position.set(7, 0, 12);
     return mesh;
