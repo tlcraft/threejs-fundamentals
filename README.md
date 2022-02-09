@@ -30,3 +30,7 @@ Sample project for learning more about three.js.
 ## Font
 
 [Facetype.js](https://gero3.github.io/facetype.js/)
+
+## Particles
+
+[Star Particle Source](https://ditt.to/game-dev/unity-sparkles)
