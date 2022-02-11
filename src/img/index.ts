@@ -13,6 +13,7 @@ import doorNormal from './door/Door_Wood_001_normal.jpg';
 import doorOpacity from './door/Door_Wood_001_opacity.jpg';
 import doorRoughness from './door/Door_Wood_001_roughness.jpg';
 import starParticle from './particles/star.png';
+import star7Particle from './particles/particlePack_1.1/PNG (Transparent)/star_07.png';
 import gradient from './gradient.png';
 import ice from './ice.png';
 import matcap from './matcap/generator2.jpg';
@@ -21,4 +22,4 @@ import fiveTone from './tones/fiveTone.jpg';
 import shadow from './shadow.jpg';
 import simpleShadow from './simpleShadow.png';
 
-export { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow, starParticle };
+export { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow, starParticle, star7Particle };
