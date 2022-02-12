@@ -34,3 +34,4 @@ Sample project for learning more about three.js.
 ## Particles
 
 [Star Particle Source](https://ditt.to/game-dev/unity-sparkles)
+[Particles](https://www.kenney.nl/assets/particle-pack)
