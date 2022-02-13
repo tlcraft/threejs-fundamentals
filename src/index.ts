@@ -63,7 +63,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow, starParticle } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow, star7Particle } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
 import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
@@ -103,7 +103,7 @@ const environmentMapTexture = cubeTextureLoader.load([
 const bakedShadow = textureLoader.load(shadow);
 const simpleShadowTexture = textureLoader.load(simpleShadow);
 
-const starParticleTexture = textureLoader.load(starParticle);
+const star7ParticleTexture = textureLoader.load(star7Particle);
 
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
@@ -855,7 +855,7 @@ function generateRandomParticles(): Points {
 
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', positionsAttribute);
-    const material = new PointsMaterial( {size: 0.1, sizeAttenuation: true, color: new Color('#ff3300'), map: starParticleTexture } );
+    const material = new PointsMaterial( {size: 0.1, sizeAttenuation: true, color: new Color('#ff3300'), map: star7ParticleTexture, transparent: true } );
     const mesh = new Points( geometry, material );
     mesh.position.set(7, 0, 12);
     return mesh;
