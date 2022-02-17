@@ -1,4 +1,5 @@
 import { 
+    AdditiveBlending,
   AmbientLight,
   AxesHelper,
   BoxGeometry,
@@ -855,7 +856,15 @@ function generateRandomParticles(): Points {
 
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', positionsAttribute);
-    const material = new PointsMaterial( {size: 0.1, sizeAttenuation: true, color: new Color('#ff3300'), alphaMap: star7ParticleTexture, depthWrite: false, transparent: true } );
+    const material = new PointsMaterial( {
+        size: 0.1, 
+        sizeAttenuation: true, 
+        color: new Color('#ff3300'), 
+        alphaMap: star7ParticleTexture, 
+        depthWrite: false, 
+        blending: AdditiveBlending, 
+        transparent: true 
+    } );
     const mesh = new Points( geometry, material );
     mesh.position.set(7, 0, 12);
     return mesh;
