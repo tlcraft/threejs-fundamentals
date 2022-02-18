@@ -848,22 +848,28 @@ function generateRandomParticles(): Points {
     const numberOfTriangles = 2000;
     const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
+    const colors = new Float32Array(totalLength);
+    
     for(let i = 0; i < totalLength; i++) {
         positions[i] = (Math.random() - 1) * 5;
+        colors[i] = Math.random();
     }
 
     const positionsAttribute = new BufferAttribute(positions, 3);
-
+    const colorsAttribute = new BufferAttribute(colors, 3);
+ 
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', positionsAttribute);
+    geometry.setAttribute('color', colorsAttribute);
+
     const material = new PointsMaterial( {
         size: 0.1, 
-        sizeAttenuation: true, 
-        color: new Color('#ff3300'), 
+        sizeAttenuation: true,
         alphaMap: star7ParticleTexture, 
         depthWrite: false, 
         blending: AdditiveBlending, 
-        transparent: true 
+        transparent: true,
+        vertexColors: true
     } );
     const mesh = new Points( geometry, material );
     mesh.position.set(7, 0, 12);
