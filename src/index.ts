@@ -254,10 +254,13 @@ function startup(): void {
         requestAnimationFrame(animate);
 
         const delta = clock.getDelta();
+        const elapsedTime = clock.getElapsedTime();
 
         animateCube(cube, delta);
 
         sphere.rotation.y += delta;
+
+        randomPointParticles.position.y = -elapsedTime * 0.5;
 
         animateMesh(materialSphere, delta);
         animateMesh(materialTorus, delta);
