@@ -109,6 +109,8 @@ const star7ParticleTexture = textureLoader.load(star7Particle);
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
+const numberOfTriangles = 2000;
+
 function startup(): void {
     const controls = generateControls();
     const axesHelper = new AxesHelper();
@@ -848,7 +850,6 @@ function generatePointParticles(): Points {
 }
 
 function generateRandomParticles(): Points {
-    const numberOfTriangles = 2000;
     const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
     const colors = new Float32Array(totalLength);
