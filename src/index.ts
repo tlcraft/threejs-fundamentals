@@ -262,7 +262,16 @@ function startup(): void {
 
         sphere.rotation.y += delta;
 
-        randomPointParticles.position.y = -elapsedTime * 0.5;
+        // This is just for demonstration purposes and custom shaders should be used instead
+        const numberOfVertices = randomPointParticles.geometry.attributes.position.array.length;
+        for(let i = 0; i < numberOfVertices / 3; i++) {
+            const i3 = i * 3;
+            if(i3+1 < numberOfVertices) {
+                const x = randomPointParticles.geometry.attributes.position.array[i3];
+                randomPointParticles.geometry.attributes.position.setY(i3 + 1, Math.sin(elapsedTime + x));
+            }
+        }
+        randomPointParticles.geometry.attributes.position.needsUpdate = true;
 
         animateMesh(materialSphere, delta);
         animateMesh(materialTorus, delta);
@@ -850,7 +859,7 @@ function generatePointParticles(): Points {
 }
 
 function generateRandomParticles(): Points {
-    const totalLength = numberOfTriangles * 9; // 3 points with 3 values (x, y, z) each
+    const totalLength = numberOfTriangles * 9; // points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
     const colors = new Float32Array(totalLength);
     
