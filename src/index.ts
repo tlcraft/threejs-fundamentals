@@ -1,62 +1,62 @@
 import { 
     AdditiveBlending,
-  AmbientLight,
-  AxesHelper,
-  BoxGeometry,
-  BufferAttribute,
-  BufferGeometry,
-  CameraHelper,
-  CircleGeometry,
-  Clock,
-  Color,
-  ConeGeometry,
-  CubeTextureLoader,
-  CylinderGeometry,
-  DirectionalLight,
-  DirectionalLightHelper,
-  DoubleSide,
-  Font,
-  Group,
-  HemisphereLight,
-  HemisphereLightHelper,
-  Light,
-  LoadingManager,
-  Material,
-  Mesh,
-  MeshBasicMaterial,
-  MeshLambertMaterial,
-  MeshMatcapMaterial,
-  MeshNormalMaterial,
-  MeshPhongMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  MeshToonMaterial,
-  NearestFilter,
-  Object3D,
-  OctahedronGeometry,
-  OrthographicCamera,
-  PCFSoftShadowMap,
-  PerspectiveCamera,
-  PlaneBufferGeometry,
-  PlaneGeometry,
-  PointLight,
-  PointLightHelper,
-  Points,
-  PointsMaterial,
-  RectAreaLight,
-  RingGeometry,
-  Scene,
-  SphereBufferGeometry,
-  SphereGeometry,
-  SpotLight,
-  SpotLightHelper,
-  TextGeometry,
-  Texture,
-  TextureLoader,
-  TorusBufferGeometry,
-  TorusGeometry,
-  TorusKnotGeometry,
-  WebGLRenderer
+    AmbientLight,
+    AxesHelper,
+    BoxGeometry,
+    BufferAttribute,
+    BufferGeometry,
+    CameraHelper,
+    CircleGeometry,
+    Clock,
+    Color,
+    ConeGeometry,
+    CubeTextureLoader,
+    CylinderGeometry,
+    DirectionalLight,
+    DirectionalLightHelper,
+    DoubleSide,
+    Font,
+    Group,
+    HemisphereLight,
+    HemisphereLightHelper,
+    Light,
+    LoadingManager,
+    Material,
+    Mesh,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    MeshMatcapMaterial,
+    MeshNormalMaterial,
+    MeshPhongMaterial,
+    MeshPhysicalMaterial,
+    MeshStandardMaterial,
+    MeshToonMaterial,
+    NearestFilter,
+    Object3D,
+    OctahedronGeometry,
+    OrthographicCamera,
+    PCFSoftShadowMap,
+    PerspectiveCamera,
+    PlaneBufferGeometry,
+    PlaneGeometry,
+    PointLight,
+    PointLightHelper,
+    Points,
+    PointsMaterial,
+    RectAreaLight,
+    RingGeometry,
+    Scene,
+    SphereBufferGeometry,
+    SphereGeometry,
+    SpotLight,
+    SpotLightHelper,
+    TextGeometry,
+    Texture,
+    TextureLoader,
+    TorusBufferGeometry,
+    TorusGeometry,
+    TorusKnotGeometry,
+    WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -109,7 +109,7 @@ const star7ParticleTexture = textureLoader.load(star7Particle);
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
 
-const numberOfTriangles = 2000;
+const numberOfParticles = 2000;
 
 function startup(): void {
     const controls = generateControls();
@@ -262,12 +262,12 @@ function startup(): void {
 
         sphere.rotation.y += delta;
 
-        // This is just for demonstration purposes and custom shaders should be used instead
+        //This is just for demonstration purposes since it updates thousands of particles and custom shaders should be used instead
         const numberOfVertices = randomPointParticles.geometry.attributes.position.array.length;
-        for(let i = 0; i < numberOfVertices / 3; i++) {
+        for(let i = 0; i < numberOfVertices; i++) {
             const i3 = i * 3;
             if(i3+1 < numberOfVertices) {
-                const x = randomPointParticles.geometry.attributes.position.array[i3];
+                const x = randomPointParticles.geometry.attributes.position.getX(i3);
                 randomPointParticles.geometry.attributes.position.setY(i3 + 1, Math.sin(elapsedTime + x));
             }
         }
@@ -859,7 +859,7 @@ function generatePointParticles(): Points {
 }
 
 function generateRandomParticles(): Points {
-    const totalLength = numberOfTriangles * 9; // points with 3 values (x, y, z) each
+    const totalLength = numberOfParticles * 3; // points with 3 values (x, y, z) each
     const positions = new Float32Array(totalLength); // x, y, z vertices
     const colors = new Float32Array(totalLength);
     
