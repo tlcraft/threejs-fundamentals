@@ -263,13 +263,10 @@ function startup(): void {
         sphere.rotation.y += delta;
 
         //This is just for demonstration purposes since it updates thousands of particles and custom shaders should be used instead
-        const numberOfVertices = randomPointParticles.geometry.attributes.position.array.length;
-        for(let i = 0; i < numberOfVertices; i++) {
-            const i3 = i * 3;
-            if(i3+1 < numberOfVertices) {
-                const x = randomPointParticles.geometry.attributes.position.getX(i3);
-                randomPointParticles.geometry.attributes.position.setY(i3 + 1, Math.sin(elapsedTime + x));
-            }
+        const numberOfPositions = randomPointParticles.geometry.attributes.position.array.length;
+        for(let i = 0; i < numberOfPositions; i++) {
+            const x = randomPointParticles.geometry.attributes.position.getX(i);
+            randomPointParticles.geometry.attributes.position.setY(i, Math.sin(elapsedTime + x));
         }
         randomPointParticles.geometry.attributes.position.needsUpdate = true;
 
