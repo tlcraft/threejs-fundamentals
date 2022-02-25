@@ -1,58 +1,62 @@
 import { 
-  AmbientLight,
-  AxesHelper,
-  BoxGeometry,
-  BufferAttribute,
-  BufferGeometry,
-  CameraHelper,
-  CircleGeometry,
-  Clock,
-  Color,
-  ConeGeometry,
-  CubeTextureLoader,
-  CylinderGeometry,
-  DirectionalLight,
-  DirectionalLightHelper,
-  DoubleSide,
-  Font,
-  Group,
-  HemisphereLight,
-  HemisphereLightHelper,
-  Light,
-  LoadingManager,
-  Material,
-  Mesh,
-  MeshBasicMaterial,
-  MeshLambertMaterial,
-  MeshMatcapMaterial,
-  MeshNormalMaterial,
-  MeshPhongMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  MeshToonMaterial,
-  NearestFilter,
-  Object3D,
-  OctahedronGeometry,
-  OrthographicCamera,
-  PCFSoftShadowMap,
-  PerspectiveCamera,
-  PlaneBufferGeometry,
-  PlaneGeometry,
-  PointLight,
-  PointLightHelper,
-  RectAreaLight,
-  RingGeometry,
-  Scene,
-  SphereGeometry,
-  SpotLight,
-  SpotLightHelper,
-  TextGeometry,
-  Texture,
-  TextureLoader,
-  TorusBufferGeometry,
-  TorusGeometry,
-  TorusKnotGeometry,
-  WebGLRenderer
+    AdditiveBlending,
+    AmbientLight,
+    AxesHelper,
+    BoxGeometry,
+    BufferAttribute,
+    BufferGeometry,
+    CameraHelper,
+    CircleGeometry,
+    Clock,
+    Color,
+    ConeGeometry,
+    CubeTextureLoader,
+    CylinderGeometry,
+    DirectionalLight,
+    DirectionalLightHelper,
+    DoubleSide,
+    Font,
+    Group,
+    HemisphereLight,
+    HemisphereLightHelper,
+    Light,
+    LoadingManager,
+    Material,
+    Mesh,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    MeshMatcapMaterial,
+    MeshNormalMaterial,
+    MeshPhongMaterial,
+    MeshPhysicalMaterial,
+    MeshStandardMaterial,
+    MeshToonMaterial,
+    NearestFilter,
+    Object3D,
+    OctahedronGeometry,
+    OrthographicCamera,
+    PCFSoftShadowMap,
+    PerspectiveCamera,
+    PlaneBufferGeometry,
+    PlaneGeometry,
+    PointLight,
+    PointLightHelper,
+    Points,
+    PointsMaterial,
+    RectAreaLight,
+    RingGeometry,
+    Scene,
+    SphereBufferGeometry,
+    SphereGeometry,
+    SpotLight,
+    SpotLightHelper,
+    TextGeometry,
+    Texture,
+    TextureLoader,
+    TorusBufferGeometry,
+    TorusGeometry,
+    TorusKnotGeometry,
+    WebGLRenderer
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -60,7 +64,7 @@ import * as dat from 'dat.gui';
 import gsap from 'gsap';
 import { Point } from '~models/point';
 import { Cursor } from '~models/cursor';
-import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow } from '~img';
+import { clouds_down, clouds_east, clouds_north, clouds_south, clouds_up, clouds_west, crate, door, doorAmbientOcclusion, doorHeight, doorMetallic, doorNormal, doorOpacity, doorRoughness, gradient, ice, matcap, matcapBlue, fiveTone, shadow, simpleShadow, star7Particle } from '~img';
 import * as droid from './fonts/droid_sans_bold.typeface.json';
 import * as droidSerif from './fonts/droid_serif_bold.typeface.json';
 import * as helvetiker from './fonts/helvetiker_regular.typeface.json';
@@ -100,8 +104,12 @@ const environmentMapTexture = cubeTextureLoader.load([
 const bakedShadow = textureLoader.load(shadow);
 const simpleShadowTexture = textureLoader.load(simpleShadow);
 
+const star7ParticleTexture = textureLoader.load(star7Particle);
+
 const sharedMaterial = generateEnvironmentMaterial();
 const matcapMaterial = new MeshMatcapMaterial({matcap: matcapBlueTexture});
+
+const numberOfParticles = 2000;
 
 function startup(): void {
     const controls = generateControls();
@@ -191,6 +199,12 @@ function startup(): void {
     const rocket = generateRocketGroup();
     scene.add(rocket);
 
+    const points = generatePointParticles();    
+    scene.add(points);
+
+    const randomPointParticles = generateRandomParticles();
+    scene.add(randomPointParticles);
+    
     const ambientLight = new AmbientLight( 0x404040, 0.5 );
     scene.add(ambientLight);
 
@@ -242,10 +256,19 @@ function startup(): void {
         requestAnimationFrame(animate);
 
         const delta = clock.getDelta();
+        const elapsedTime = clock.getElapsedTime();
 
         animateCube(cube, delta);
 
         sphere.rotation.y += delta;
+
+        //This is just for demonstration purposes since it updates thousands of particles and custom shaders should be used instead
+        const numberOfPositions = randomPointParticles.geometry.attributes.position.array.length;
+        for(let i = 0; i < numberOfPositions; i++) {
+            const x = randomPointParticles.geometry.attributes.position.getX(i);
+            randomPointParticles.geometry.attributes.position.setY(i, Math.sin(elapsedTime + x));
+        }
+        randomPointParticles.geometry.attributes.position.needsUpdate = true;
 
         animateMesh(materialSphere, delta);
         animateMesh(materialTorus, delta);
@@ -823,6 +846,44 @@ function generateRocketGroup(): Group {
     group.position.y = 15;
 
     return group;
+}
+
+function generatePointParticles(): Points {
+    const particleGeometry = new SphereBufferGeometry(1, 32, 32);
+    const particleMaterial = new PointsMaterial({size: 0.02, sizeAttenuation: true});
+    const points = new Points(particleGeometry, particleMaterial);    
+    return points;
+}
+
+function generateRandomParticles(): Points {
+    const totalLength = numberOfParticles * 3; // points with 3 values (x, y, z) each
+    const positions = new Float32Array(totalLength); // x, y, z vertices
+    const colors = new Float32Array(totalLength);
+    
+    for(let i = 0; i < totalLength; i++) {
+        positions[i] = (Math.random() - 1) * 5;
+        colors[i] = Math.random();
+    }
+
+    const positionsAttribute = new BufferAttribute(positions, 3);
+    const colorsAttribute = new BufferAttribute(colors, 3);
+ 
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', positionsAttribute);
+    geometry.setAttribute('color', colorsAttribute);
+
+    const material = new PointsMaterial( {
+        size: 0.1, 
+        sizeAttenuation: true,
+        alphaMap: star7ParticleTexture, 
+        depthWrite: false, 
+        blending: AdditiveBlending, 
+        transparent: true,
+        vertexColors: true
+    } );
+    const mesh = new Points( geometry, material );
+    mesh.position.set(7, 0, 12);
+    return mesh;
 }
 
 function generateDirectionalLight(): DirectionalLight {
